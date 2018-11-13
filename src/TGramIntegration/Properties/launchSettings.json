@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false, 
@@ -9,21 +9,17 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "api/values",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "TGramIntegration": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api/values",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "GITLAB:TOKEN": "2t9zny109mdgw93f8wgn37trb2c32g232mx83rxhmg9fhgxa98iu",
+        "TGRAM:ENDPOINT": "https://api.telegram.org",
+        "TGRAM:TOKEN": "718850795:AAEh-5JuoD82EbmJvhOJy1fvALoz5QFlAGY",
+        "TGRAM:CHANNEL": "@epamflklddp"
       }
     }
   }
