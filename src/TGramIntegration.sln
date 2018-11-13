@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{928625DD-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramWeb.Test", "Test\TgramIntegration.Test\TGramWeb.Test.csproj", "{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramDaemon", "TGramDaemon\TGramDaemon.csproj", "{8342406A-5863-47F4-91F6-2002E9739D9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8342406A-5863-47F4-91F6-2002E9739D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8342406A-5863-47F4-91F6-2002E9739D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8342406A-5863-47F4-91F6-2002E9739D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8342406A-5863-47F4-91F6-2002E9739D9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
