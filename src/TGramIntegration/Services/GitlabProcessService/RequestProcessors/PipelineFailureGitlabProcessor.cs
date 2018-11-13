@@ -1,15 +1,19 @@
 using System;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using TGramIntegration.Services.MessageClient;
 
 namespace TGramIntegration.Services.GitlabProcessService.RequestProcessors
 {
     public class PipelineFailureGitlabProcessor: IGitlabProcessor
     {
+        private readonly IMessageClient messageClient;
         private readonly ILogger logger;
 
-        public PipelineFailureGitlabProcessor(ILogger<PipelineFailureGitlabProcessor> logger)
+        public PipelineFailureGitlabProcessor(IMessageClient messageClient,
+                                              ILogger<PipelineFailureGitlabProcessor> logger)
         {
+            this.messageClient = messageClient;
             this.logger = logger;
         }
 
@@ -56,7 +60,7 @@ namespace TGramIntegration.Services.GitlabProcessService.RequestProcessors
                             string message = $"*{projectName}*\r\nThe pipeline [#{pipelineId}]({projectUrl}/pipelines/{pipelineId}) has failed for the branch *{branchName}*!";
                             this.logger.LogTrace("Composed the message: \"{0}\"", message);
 
-
+                            this.messageClient.ScheduleDelivery(message);
 
                             result = RequestProcessResult.CreateSuccess();
                         }

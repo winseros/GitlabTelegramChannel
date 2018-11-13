@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Text;
+using TGramIntegration.Exceptions;
 
 namespace TGramIntegration.Services.TelegramService
 {
@@ -20,18 +21,18 @@ namespace TGramIntegration.Services.TelegramService
             if (string.IsNullOrEmpty(this.Token))
             {
                 sb = new StringBuilder();
-                sb.Append($"{counter}. The TGram:{nameof(this.Token)} setting not configured");
+                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Token)} setting not configured");
             }
 
             if (string.IsNullOrEmpty(this.Channel))
             {
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
-                sb.Append($"{counter}. The TGram:{nameof(this.Channel)} setting not configured");
+                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Channel)} setting not configured");
             }
 
             if (sb != null)
-                throw new TelegramConfigurationException(sb.ToString());
+                throw new ConfigurationException(sb.ToString());
         }
     }
 }

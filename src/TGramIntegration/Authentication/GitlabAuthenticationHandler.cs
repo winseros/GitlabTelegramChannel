@@ -24,8 +24,7 @@ namespace TGramIntegration.Authentication
 
         protected override Task InitializeHandlerAsync()
         {
-            if (string.IsNullOrEmpty(this.Options.Token))
-                throw new GitlabConfigurationException($"The {nameof(GitlabAuthenticationOptions)}.{nameof(GitlabAuthenticationOptions.Token)} can not be empty");
+            this.Options.ThrowIfInvalid();
             return base.InitializeHandlerAsync();
         }
 
