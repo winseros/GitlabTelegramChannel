@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authentication;
 
-namespace TGramIntegration.Authentication
+namespace TGramWeb.Authentication
 {
     internal static class AuthenticationBuilderExtensions
     {

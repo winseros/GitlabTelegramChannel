@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TGramIntegration.Authentication;
-using TGramIntegration.Services;
+using TGramWeb.Authentication;
+using TGramWeb.Services;
 
-namespace TGramIntegration
+namespace TGramWeb
 {
     public class Startup
     {

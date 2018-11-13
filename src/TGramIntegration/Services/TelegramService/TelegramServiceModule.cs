@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TGramIntegration.Services.TelegramService
+namespace TGramWeb.Services.TelegramService
 {
     internal static class TelegramServiceModule
     {

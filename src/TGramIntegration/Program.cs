@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
-namespace TGramIntegration
+namespace TGramWeb
 {
     public static class Program
     {

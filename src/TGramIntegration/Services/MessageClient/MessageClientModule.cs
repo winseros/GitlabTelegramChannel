@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TGramIntegration.Services.MessageClient
+namespace TGramWeb.Services.MessageClient
 {
     internal static class MessageClientModule
     {

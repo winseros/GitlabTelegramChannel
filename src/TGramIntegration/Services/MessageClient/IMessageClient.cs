@@ -1,4 +1,4 @@
-namespace TGramIntegration.Services.MessageClient
+namespace TGramWeb.Services.MessageClient
 {
     public interface IMessageClient
     {

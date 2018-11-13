@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TGramIntegration.Services.GitlabProcessService;
-using TGramIntegration.Services.MessageClient;
-using TGramIntegration.Services.TelegramService;
+using TGramWeb.Services.GitlabProcessService;
+using TGramWeb.Services.MessageClient;
+using TGramWeb.Services.TelegramService;
 
-namespace TGramIntegration.Services
+namespace TGramWeb.Services
 {
     internal static class ServicesModule
     {

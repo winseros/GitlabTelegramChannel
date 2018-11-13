@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using TGramIntegration.Exceptions;
+using TGramWeb.Exceptions;
 
-namespace TGramIntegration.Services.MessageClient
+namespace TGramWeb.Services.MessageClient
 {
     [DebuggerDisplay("Address: {Address}")]
     public class MessageClientOptions

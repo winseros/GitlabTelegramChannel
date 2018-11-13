@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-using TGramIntegration.Exceptions;
+using TGramWeb.Exceptions;
 
-namespace TGramIntegration.Services.TelegramService
+namespace TGramWeb.Services.TelegramService
 {
     [DebuggerDisplay("Channel: {Channel}, Endpoint: {Endpoint}, Token: {Token}")]
     public class TelegramOptions

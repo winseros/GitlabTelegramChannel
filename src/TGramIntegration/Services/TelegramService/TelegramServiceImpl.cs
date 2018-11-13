@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace TGramIntegration.Services.TelegramService
+namespace TGramWeb.Services.TelegramService
 {
     public class TelegramServiceImpl : ITelegramService
     {

@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Authentication;
-using TGramIntegration.Exceptions;
+﻿using Microsoft.AspNetCore.Authentication;
+using TGramWeb.Exceptions;
 
-namespace TGramIntegration.Authentication
+namespace TGramWeb.Authentication
 {
     public class GitlabAuthenticationOptions: AuthenticationSchemeOptions
     {

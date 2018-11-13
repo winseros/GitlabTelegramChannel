@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-namespace TGramIntegration.Authentication
+namespace TGramWeb.Authentication
 {
     public class GitlabAuthenticationHandler: AuthenticationHandler<GitlabAuthenticationOptions>
     {

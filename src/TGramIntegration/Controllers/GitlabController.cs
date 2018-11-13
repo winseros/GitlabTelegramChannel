@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using TGramIntegration.Services.GitlabProcessService;
+using TGramWeb.Services.GitlabProcessService;
 
-namespace TGramIntegration.Controllers
+namespace TGramWeb.Controllers
 {
     [Route("api/gitlab_hook")]
     [ApiController]

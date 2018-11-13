@@ -3,10 +3,10 @@ using Autofac.Extras.Moq;
 using Microsoft.Extensions.Options;
 using NetMQ;
 using NetMQ.Sockets;
-using TGramIntegration.Services.MessageClient;
+using TGramWeb.Services.MessageClient;
 using Xunit;
 
-namespace TGramIntegration.Test.Services.MessageClient
+namespace TGramWeb.Test.Services.MessageClient
 {
     public class MessageClientImplTest
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 
-namespace TGramIntegration.Services.GitlabProcessService.RequestProcessors
+namespace TGramWeb.Services.GitlabProcessService.RequestProcessors
 {
     public class MergeGitlabGitlabProcessor: IGitlabProcessor
     {

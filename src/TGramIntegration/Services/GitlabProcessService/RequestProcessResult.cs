@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TGramIntegration.Services.GitlabProcessService
+namespace TGramWeb.Services.GitlabProcessService
 {
     public struct RequestProcessResult
     {

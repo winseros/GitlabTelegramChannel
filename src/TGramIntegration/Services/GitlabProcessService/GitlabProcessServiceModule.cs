@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using TGramIntegration.Services.GitlabProcessService.RequestProcessors;
+using TGramWeb.Services.GitlabProcessService.RequestProcessors;
 
-namespace TGramIntegration.Services.GitlabProcessService
+namespace TGramWeb.Services.GitlabProcessService
 {
     internal static class GitlabProcessServiceModule
     {

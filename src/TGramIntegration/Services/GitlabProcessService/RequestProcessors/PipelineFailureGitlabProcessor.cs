@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using TGramIntegration.Services.MessageClient;
+using TGramWeb.Services.MessageClient;
 
-namespace TGramIntegration.Services.GitlabProcessService.RequestProcessors
+namespace TGramWeb.Services.GitlabProcessService.RequestProcessors
 {
     public class PipelineFailureGitlabProcessor: IGitlabProcessor
     {

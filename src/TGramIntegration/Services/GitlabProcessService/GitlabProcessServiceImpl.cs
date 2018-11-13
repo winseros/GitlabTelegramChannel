@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace TGramIntegration.Services.GitlabProcessService
+namespace TGramWeb.Services.GitlabProcessService
 {
     public class GitlabProcessServiceImpl : IGitlabProcessService
     {

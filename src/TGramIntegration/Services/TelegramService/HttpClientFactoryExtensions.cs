@@ -2,7 +2,7 @@
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TGramIntegration.Services.TelegramService
+namespace TGramWeb.Services.TelegramService
 {
     public static class HttpClientFactoryExtensions
     {

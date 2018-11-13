@@ -1,4 +1,4 @@
-﻿namespace TGramIntegration.Authentication
+﻿namespace TGramWeb.Authentication
 {
     internal static class GitlabAuthenticationDefaults
     {

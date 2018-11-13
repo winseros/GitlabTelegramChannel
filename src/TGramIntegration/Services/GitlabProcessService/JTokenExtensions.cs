@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 
-namespace TGramIntegration.Services.GitlabProcessService
+namespace TGramWeb.Services.GitlabProcessService
 {
     internal static class JTokenExtensions
     {

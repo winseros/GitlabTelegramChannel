@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using NetMQ;
 using NetMQ.Sockets;
 
-namespace TGramIntegration.Services.MessageClient
+namespace TGramWeb.Services.MessageClient
 {
     public class MessageClientImpl : IMessageClient, IDisposable
     {

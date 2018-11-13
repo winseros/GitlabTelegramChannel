@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace TGramIntegration.Services.GitlabProcessService
+namespace TGramWeb.Services.GitlabProcessService
 {
     public interface IGitlabProcessor
     {
