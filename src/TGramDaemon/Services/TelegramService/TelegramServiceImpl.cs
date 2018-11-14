@@ -49,9 +49,8 @@ namespace TGramDaemon.Services.TelegramService
 
             this.logger.LogDebug("Sending the request: {0} to the endpoint", request);
 
-            using (HttpClient client = this.clientFactory.CreateClient())
+            using (HttpClient client = this.clientFactory.CreateTelegramClient())
             {
-                client.BaseAddress = this.options.Endpoint;
                 this.logger.LogDebug("Using endpoint: {0}", client.BaseAddress);
 
                 var content = new ObjectContent(typeof(SendMessageRequest), request, this.snakeCaseFormatter);

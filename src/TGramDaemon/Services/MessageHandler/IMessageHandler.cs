@@ -1,9 +1,12 @@
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace TGramDaemon.Services.MessageHandler
 {
     public interface IMessageHandler
     {
         void Start();
 
-        void Stop();
+        Task StopAsync(CancellationToken ct);
     }
 }

@@ -33,14 +33,16 @@ namespace TGramWeb.Test.Services.MessageClient
             [Fact]
             public void It_Should_Send_Message_To_Socket()
             {
-                const string address = "inproc://address";
-                using (var socket = new PullSocket(address))
+                const string address = "tcp://127.0.0.1:12345";
+                using (var socket = new PullSocket())
                 using (AutoMock mock = AutoMock.GetLoose())
                 {
                     mock.Provide<IOptions<MessageClientOptions>>(new OptionsWrapper<MessageClientOptions>(new MessageClientOptions
                     {
                         Address = address
                     }));
+
+                    socket.Connect(address);
 
                     var service = mock.Create<MessageClientImpl>();
                     service.ScheduleDelivery("A some message 1");

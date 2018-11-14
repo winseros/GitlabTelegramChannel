@@ -16,6 +16,7 @@ namespace TGramDaemon.Services.MessageHandler
         private readonly ILogger logger;
         private CancellationTokenSource cts;
         private PullSocket socket;
+        private Task process;
 
         public MessageHandlerImpl(ITelegramService telegramService,
                                   IOptions<MessageHandlerOptions> options,
@@ -36,10 +37,10 @@ namespace TGramDaemon.Services.MessageHandler
             this.cts = new CancellationTokenSource();
             this.socket = new PullSocket();
             this.socket.Connect(this.options.Address);
-            Task.Run(() => this.Process(), this.cts.Token);
+            this.process = Task.Run(this.Process, this.cts.Token);
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken ct)
         {
             if (this.socket == null)
                 throw new InvalidOperationException("The handler has not been started");
@@ -47,6 +48,10 @@ namespace TGramDaemon.Services.MessageHandler
             this.logger.LogDebug("Stopping the message handler");
             this.cts.Cancel();
             this.socket.Close();
+
+            return this.process == null
+                       ? Task.CompletedTask
+                       : Task.WhenAny(this.process, Task.FromCanceled(ct));
         }
 
         public void Dispose()
@@ -55,7 +60,7 @@ namespace TGramDaemon.Services.MessageHandler
             this.socket?.Dispose();
         }
 
-        private void Process()
+        private async Task Process()
         {
             this.logger.LogDebug("The message handler has started");
             while (!this.cts.IsCancellationRequested)
@@ -63,7 +68,7 @@ namespace TGramDaemon.Services.MessageHandler
                 try
                 {
                     this.cts.Token.ThrowIfCancellationRequested();
-                    this.ProcessCycle();
+                    await this.ProcessCycle();
                 }
                 catch (Exception ex)
                 {
@@ -73,11 +78,11 @@ namespace TGramDaemon.Services.MessageHandler
             this.logger.LogDebug("The message handler has stopped");
         }
 
-        private void ProcessCycle()
+        private async Task ProcessCycle()
         {
             string markDown = this.socket.ReceiveFrameString();
             this.logger.LogTrace("Received the message: {0}", markDown);
-            this.telegramService.SendMessageAsync(markDown, this.cts.Token);
+            await this.telegramService.SendMessageAsync(markDown, this.cts.Token);
         }
     }
 }

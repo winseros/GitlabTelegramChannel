@@ -1,6 +1,9 @@
 using System;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Polly;
 
 namespace TGramDaemon.Services.TelegramService
 {
@@ -8,11 +11,19 @@ namespace TGramDaemon.Services.TelegramService
     {
         private const string clientName = "TelegramHttpClient";
 
-        public static IHttpClientBuilder AddTelegramClient(this IServiceCollection services, Action<HttpClient> configureClient = null)
+        public static void AddTelegramClient(this IServiceCollection services, IConfiguration configuration)
         {
-            return configureClient == null
-                ? services.AddHttpClient(HttpClientFactoryExtensions.clientName)
-                : services.AddHttpClient(HttpClientFactoryExtensions.clientName, configureClient);
+            RetryOptions retry = configuration.GetSection("TGram:Retry").Get<RetryOptions>() ?? new RetryOptions();
+            retry.ThrowIfInvalid();
+
+            services.AddHttpClient(HttpClientFactoryExtensions.clientName)
+                    .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(retry.Attempts, i => TimeSpan.FromSeconds(retry.Interval)))
+                    .ConfigureHttpClient((di, client) =>
+                    {
+                        TelegramOptions options = di.GetRequiredService<IOptions<TelegramOptions>>().Value;
+                        client.Timeout = TimeSpan.FromSeconds(options.Timeout);
+                        client.BaseAddress = options.Endpoint;
+                    });
         }
 
         public static HttpClient CreateTelegramClient(this IHttpClientFactory factory)

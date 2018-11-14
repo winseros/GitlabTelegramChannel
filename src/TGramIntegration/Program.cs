@@ -14,7 +14,7 @@ namespace TGramWeb
         {
             IHost daemonHost = DaemonHost.CreateBuilder(args).Build();
             IWebHost webHost = Program.CreateWebHostBuilder(args).Build();
-            
+
             var webLifetime = (IApplicationLifetime) webHost.Services.GetService(typeof(IApplicationLifetime));
             webLifetime.ApplicationStopping.Register(() => daemonHost.StopAsync(TimeSpan.FromSeconds(5)).Wait());
 
@@ -22,7 +22,7 @@ namespace TGramWeb
             webHost.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                    .UseSerilog(Program.ConfigureSerilog)
                    .UseStartup<Startup>();

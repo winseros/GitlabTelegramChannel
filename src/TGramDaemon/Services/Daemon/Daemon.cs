@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -7,7 +8,7 @@ using TGramDaemon.Services.MessageHandler;
 
 namespace TGramDaemon.Services.Daemon
 {
-    public class Daemon: IHostedService
+    public class Daemon : IHostedService
     {
         private readonly IMessageHandlerFactory messageHandlerFactory;
         private readonly DaemonOptions options;
@@ -24,7 +25,7 @@ namespace TGramDaemon.Services.Daemon
             this.logger = logger;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken ct)
         {
             this.logger.LogDebug("Starting the daemon");
 
@@ -36,19 +37,14 @@ namespace TGramDaemon.Services.Daemon
                 this.messageHandlers[i] = handler;
             }
 
-            return Task.FromResult((object)null);
+            return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken ct)
         {
             this.logger.LogDebug("Stopping the handlers");
 
-            foreach (IMessageHandler messageHandler in this.messageHandlers)
-            {
-                messageHandler.Stop();
-            }
-
-            return Task.FromResult((object)null);
+            return Task.WhenAll(this.messageHandlers.Select(p => p.StopAsync(ct)));
         }
     }
 }

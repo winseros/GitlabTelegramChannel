@@ -9,7 +9,7 @@ namespace TGramDaemon.Services.TelegramService
         {
             services.Configure<TelegramOptions>(configuration.GetSection("TGram"));
             services.AddSingleton<ITelegramService, TelegramServiceImpl>();
-            services.AddTelegramClient();
+            services.AddTelegramClient(configuration);
         }
     }
 }

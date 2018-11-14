@@ -1,5 +1,8 @@
-﻿namespace TGramDaemon.Services.TelegramService
+﻿using System.Diagnostics;
+
+namespace TGramDaemon.Services.TelegramService
 {
+    [DebuggerDisplay("ChatId: {ChatId}, Text: {Text}")]
     public class SendMessageRequest
     {
         public string ChatId { get; set; }

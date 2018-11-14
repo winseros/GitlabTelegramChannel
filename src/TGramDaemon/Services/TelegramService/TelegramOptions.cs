@@ -14,6 +14,8 @@ namespace TGramDaemon.Services.TelegramService
 
         public Uri Endpoint { get; set; }
 
+        public int Timeout { get; set; }
+
         internal void ThrowIfInvalid()
         {
             StringBuilder sb = null;
@@ -29,6 +31,13 @@ namespace TGramDaemon.Services.TelegramService
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
                 sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Channel)} setting not configured");
+            }
+
+            if (this.Timeout <= 0)
+            {
+                sb = sb ?? new StringBuilder();
+                if (counter > 1) sb.Append(Environment.NewLine);
+                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Timeout)} must be a positive number");
             }
 
             if (sb != null)
