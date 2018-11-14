@@ -39,7 +39,8 @@ namespace TGramWeb.Services.MessageClient
                     if (this.socket == null)
                     {
                         this.logger.LogDebug("Trying to open a socket at address {0}", this.options.Address);
-                        this.socket = new PushSocket(this.options.Address);
+                        this.socket = new PushSocket();
+                        this.socket.Bind(this.options.Address);
                     }
                 }
             }

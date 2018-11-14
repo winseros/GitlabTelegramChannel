@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace TGramWeb.Exceptions
+namespace TGramCommon.Exceptions
 {
     public class ConfigurationException: ApplicationException
     {

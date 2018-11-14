@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -13,11 +14,11 @@ namespace TGramWeb
         {
             IHost daemonHost = DaemonHost.CreateBuilder(args).Build();
             IWebHost webHost = Program.CreateWebHostBuilder(args).Build();
-
+            
             var webLifetime = (IApplicationLifetime) webHost.Services.GetService(typeof(IApplicationLifetime));
-            webLifetime.ApplicationStarted.Register(() => daemonHost.Start());
-            webLifetime.ApplicationStopping.Register(() => daemonHost.StopAsync().Wait());
+            webLifetime.ApplicationStopping.Register(() => daemonHost.StopAsync(TimeSpan.FromSeconds(5)).Wait());
 
+            daemonHost.Start();
             webHost.Run();
         }
 

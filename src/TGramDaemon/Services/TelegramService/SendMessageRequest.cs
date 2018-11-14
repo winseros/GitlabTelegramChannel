@@ -1,4 +1,4 @@
-﻿namespace TGramWeb.Services.TelegramService
+﻿namespace TGramDaemon.Services.TelegramService
 {
     public class SendMessageRequest
     {

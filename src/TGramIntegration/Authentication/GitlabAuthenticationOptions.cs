@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using TGramWeb.Exceptions;
+using Microsoft.AspNetCore.Authentication;
+using TGramCommon.Exceptions;
 
 namespace TGramWeb.Authentication
 {

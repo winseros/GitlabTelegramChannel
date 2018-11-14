@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TGramWeb.Services.TelegramService
+namespace TGramDaemon.Services.TelegramService
 {
     public static class HttpClientFactoryExtensions
     {

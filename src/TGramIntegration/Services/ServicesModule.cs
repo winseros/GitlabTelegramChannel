@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TGramWeb.Services.GitlabProcessService;
 using TGramWeb.Services.MessageClient;
-using TGramWeb.Services.TelegramService;
 
 namespace TGramWeb.Services
 {
@@ -12,7 +11,6 @@ namespace TGramWeb.Services
         {
             services.AddGitlabProcessService();
             services.AddMessageClient(configuration);
-            services.AddTelegramService(configuration);
         }
     }
 }

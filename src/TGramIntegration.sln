@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramWeb", "TGramIntegratio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{928625DD-D2CA-4C2C-8A01-D86BA5357105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramWeb.Test", "Test\TgramIntegration.Test\TGramWeb.Test.csproj", "{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramWeb.Test", "Test\TgramIntegration.Test\TGramWeb.Test.csproj", "{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramDaemon", "TGramDaemon\TGramDaemon.csproj", "{8342406A-5863-47F4-91F6-2002E9739D9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramDaemon", "TGramDaemon\TGramDaemon.csproj", "{8342406A-5863-47F4-91F6-2002E9739D9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramCommon", "TGramCommon\TGramCommon.csproj", "{4867E23E-53A7-4997-90EF-C9CD743B8AA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{8342406A-5863-47F4-91F6-2002E9739D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8342406A-5863-47F4-91F6-2002E9739D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8342406A-5863-47F4-91F6-2002E9739D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4867E23E-53A7-4997-90EF-C9CD743B8AA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4867E23E-53A7-4997-90EF-C9CD743B8AA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4867E23E-53A7-4997-90EF-C9CD743B8AA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4867E23E-53A7-4997-90EF-C9CD743B8AA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

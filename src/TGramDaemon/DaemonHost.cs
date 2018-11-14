@@ -1,9 +1,12 @@
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.AspNetCore;
+using TGramDaemon.Services;
 
 namespace TGramDaemon
 {
@@ -12,14 +15,21 @@ namespace TGramDaemon
         public static IHostBuilder CreateBuilder(string[] args)
         {
             return new HostBuilder()
+                   .UseContentRoot(Directory.GetCurrentDirectory())
                    .ConfigureAppConfiguration((context, builder) =>
                    {
-                       builder.AddJsonFile("appsettings.json");
-                       builder.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json");
+                       var cwd = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+                       builder.AddJsonFile(cwd, "appsettings.json", optional: true, reloadOnChange: true);
+                       builder.AddJsonFile(cwd, $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
                        builder.AddEnvironmentVariables();
-                       builder.AddCommandLine(args);
-                   }).ConfigureLogging(ConfigureSerilog)
-                   .ConfigureServices(services => { services.AddHostedService<Daemon>(); });
+
+                       if (args != null)
+                           builder.AddCommandLine(args);
+                   }).ConfigureLogging(DaemonHost.ConfigureSerilog)
+                   .ConfigureServices((context, services) =>
+                   {
+                       services.AddDaemonServices(context.Configuration);
+                   });
         }
 
         private static void ConfigureSerilog(HostBuilderContext context, ILoggingBuilder configuration)

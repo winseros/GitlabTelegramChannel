@@ -1,7 +1,7 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace TGramWeb.Services.TelegramService
+namespace TGramDaemon.Services.TelegramService
 {
     public interface ITelegramService
     {
