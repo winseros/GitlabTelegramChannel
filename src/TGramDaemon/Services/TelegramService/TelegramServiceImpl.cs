@@ -47,7 +47,7 @@ namespace TGramDaemon.Services.TelegramService
                 Text = message
             };
 
-            this.logger.LogDebug("Sending the request: {0} to the endpoint", request);
+            this.logger.LogDebug("Sending the request: {@0} to the endpoint", request);
 
             using (HttpClient client = this.clientFactory.CreateTelegramClient())
             {

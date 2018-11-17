@@ -9,26 +9,26 @@ namespace TGramDaemon.Services.TelegramService
 {
     public static class HttpClientFactoryExtensions
     {
-        private const string clientName = "TelegramHttpClient";
+        internal const string ClientName = "TelegramHttpClient";
 
         public static void AddTelegramClient(this IServiceCollection services, IConfiguration configuration)
         {
-            RetryOptions retry = configuration.GetSection("TGram:Retry").Get<RetryOptions>() ?? new RetryOptions();
-            retry.ThrowIfInvalid();
+            ConnectionOptions connOptions = configuration.GetSection("TGram:Connection").Get<ConnectionOptions>() ?? new ConnectionOptions();
+            connOptions.ThrowIfInvalid();
 
-            services.AddHttpClient(HttpClientFactoryExtensions.clientName)
-                    .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(retry.Attempts, i => TimeSpan.FromSeconds(retry.Interval)))
+            services.AddHttpClient(HttpClientFactoryExtensions.ClientName)
+                    .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(connOptions.Attempts, i => TimeSpan.FromSeconds(connOptions.Interval)))
                     .ConfigureHttpClient((di, client) =>
                     {
-                        TelegramOptions options = di.GetRequiredService<IOptions<TelegramOptions>>().Value;
-                        client.Timeout = TimeSpan.FromSeconds(options.Timeout);
-                        client.BaseAddress = options.Endpoint;
+                        TelegramOptions tgramOptions = di.GetRequiredService<IOptions<TelegramOptions>>().Value;
+                        client.Timeout = TimeSpan.FromSeconds(connOptions.Timeout);
+                        client.BaseAddress = tgramOptions.Endpoint;
                     });
         }
 
         public static HttpClient CreateTelegramClient(this IHttpClientFactory factory)
         {
-            HttpClient client = factory.CreateClient(HttpClientFactoryExtensions.clientName);
+            HttpClient client = factory.CreateClient(HttpClientFactoryExtensions.ClientName);
             return client;
         }
     }
