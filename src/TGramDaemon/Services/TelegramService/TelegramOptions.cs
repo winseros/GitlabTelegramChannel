@@ -22,6 +22,7 @@ namespace TGramDaemon.Services.TelegramService
             {
                 sb = new StringBuilder();
                 sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Token)} setting not configured");
+                counter++;
             }
 
             if (string.IsNullOrEmpty(this.Channel))
@@ -29,6 +30,14 @@ namespace TGramDaemon.Services.TelegramService
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
                 sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Channel)} setting not configured");
+                counter++;
+            }
+
+            if (this.Endpoint == null)
+            {
+                sb = sb ?? new StringBuilder();
+                if (counter > 1) sb.Append(Environment.NewLine);
+                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Endpoint)} setting not configured");
             }
 
             if (sb != null)

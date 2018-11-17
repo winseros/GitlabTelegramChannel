@@ -9,7 +9,7 @@ using TGramDaemon.Services.TelegramService;
 
 namespace TGramDaemon.Services.MessageHandler
 {
-    public class MessageHandlerImpl: IDisposable, IMessageHandler
+    public sealed class MessageHandlerImpl: IDisposable, IMessageHandler
     {
         private readonly ITelegramService telegramService;
         private readonly MessageHandlerOptions options;
@@ -17,6 +17,7 @@ namespace TGramDaemon.Services.MessageHandler
         private CancellationTokenSource cts;
         private PullSocket socket;
         private Task process;
+        private bool started;
 
         public MessageHandlerImpl(ITelegramService telegramService,
                                   IOptions<MessageHandlerOptions> options,
@@ -30,9 +31,10 @@ namespace TGramDaemon.Services.MessageHandler
 
         public void Start()
         {
-            if (this.socket != null)
+            if (this.started)
                 throw new InvalidOperationException("The handler has already been started");
 
+            this.started = true;
             this.logger.LogDebug("Starting the message handler");
             this.cts = new CancellationTokenSource();
             this.socket = new PullSocket();
@@ -42,16 +44,18 @@ namespace TGramDaemon.Services.MessageHandler
 
         public Task StopAsync(CancellationToken ct)
         {
-            if (this.socket == null)
+            if (!this.started)
                 throw new InvalidOperationException("The handler has not been started");
 
+            this.started = false;
             this.logger.LogDebug("Stopping the message handler");
             this.cts.Cancel();
             this.socket.Close();
 
-            return this.process == null
-                       ? Task.CompletedTask
-                       : Task.WhenAny(this.process, Task.FromCanceled(ct));
+            var cancel = new TaskCompletionSource<object>();
+            ct.Register(() => cancel.SetCanceled());
+
+            return Task.WhenAny(this.process, cancel.Task);
         }
 
         public void Dispose()

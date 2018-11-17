@@ -43,7 +43,7 @@ namespace TGramDaemon.Test.Services.TelegramService
             [Fact]
             public async Task It_Should_Send_Message_To_The_Endpoint()
             {
-                using (AutoMock mock = AutoMock.GetLoose(this.xUnitOutput.Use()))
+                using (AutoMock mock = AutoMock.GetLoose(this.xUnitOutput.Capture()))
                 {
                     IOptions<TelegramOptions> options = Options.Create(new TelegramOptions {Endpoint = new Uri("https://api.telegram.org"), Channel = "abc", Token = "cde"});
                     mock.Provide(options);

@@ -6,7 +6,7 @@ namespace TGramTestUtil
 {
     public static class OutputHelperExtensions
     {
-        public static Action<ContainerBuilder> Use(this ITestOutputHelper output)
+        public static Action<ContainerBuilder> Capture(this ITestOutputHelper output)
         {
             return builder =>
             {
