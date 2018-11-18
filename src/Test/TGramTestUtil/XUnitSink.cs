@@ -9,7 +9,7 @@ namespace TGramTestUtil
     internal class XUnitSink : ILogEventSink
     {
         private static readonly MessageTemplateTextFormatter formatter = new MessageTemplateTextFormatter("{Timestamp:HH:mm:ss.fff}|{Level:u3}|{SourceContext}|{Message:lj}", null);
-        private static readonly MessageTemplateTextFormatter exceptionFormatter = new MessageTemplateTextFormatter("{Timestamp:HH:mm:ss.fff}|{Level:u3}|{SourceContext}|{Message:lj}|{NewLine}{Exception}", null);
+        private static readonly MessageTemplateTextFormatter exceptionFormatter = new MessageTemplateTextFormatter("{Timestamp:HH:mm:ss.fff}|{Level:u3}|{SourceContext}|{Message:lj}{NewLine}{Exception}", null);
 
         private readonly ITestOutputHelper outputHelper;
 

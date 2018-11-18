@@ -8,27 +8,24 @@ namespace TGramDaemon.Test.Services.MessageHandler
 {
     public class MessageHandlerFactoryImplTest
     {
-        public class CreateHandler
+        [Fact]
+        public void Test_CreateHandler_Should_Create_A_New_Handler()
         {
-            [Fact]
-            public void It_Should_Create_A_New_Handler()
+            using (AutoMock mock = AutoMock.GetLoose())
             {
-                using (AutoMock mock = AutoMock.GetLoose())
-                {
-                    var mockHandler = new Mock<IMessageHandler>();
+                var mockHandler = new Mock<IMessageHandler>();
 
-                    mock.Mock<IServiceProvider>()
-                        .Setup(p => p.GetService(typeof(IMessageHandler)))
-                        .Returns(mockHandler.Object);
+                mock.Mock<IServiceProvider>()
+                    .Setup(p => p.GetService(typeof(IMessageHandler)))
+                    .Returns(mockHandler.Object);
 
-                    var factory = mock.Create<MessageHandlerFactoryImpl>();
-                    IMessageHandler handler = factory.CreateHandler();
+                var factory = mock.Create<MessageHandlerFactoryImpl>();
+                IMessageHandler handler = factory.CreateHandler();
 
-                    Assert.Same(mockHandler.Object, handler);
+                Assert.Same(mockHandler.Object, handler);
 
-                    mock.Mock<IServiceProvider>()
-                        .Verify(p => p.GetService(typeof(IMessageHandler)), Times.Once);
-                }
+                mock.Mock<IServiceProvider>()
+                    .Verify(p => p.GetService(typeof(IMessageHandler)), Times.Once);
             }
         }
     }

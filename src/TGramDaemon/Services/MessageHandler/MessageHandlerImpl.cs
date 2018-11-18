@@ -66,12 +66,14 @@ namespace TGramDaemon.Services.MessageHandler
 
         private async Task Process()
         {
+            CancellationToken token = this.cts.Token;
+
             this.logger.LogDebug("The message handler has started");
-            while (!this.cts.IsCancellationRequested)
+            while (!token.IsCancellationRequested)
             {
                 try
                 {
-                    this.cts.Token.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     await this.ProcessCycle();
                 }
                 catch (Exception ex)
@@ -84,9 +86,11 @@ namespace TGramDaemon.Services.MessageHandler
 
         private async Task ProcessCycle()
         {
-            string markDown = this.socket.ReceiveFrameString();
-            this.logger.LogTrace("Received the message: {0}", markDown);
-            await this.telegramService.SendMessageAsync(markDown, this.cts.Token);
+            if (this.socket.TryReceiveFrameString(TimeSpan.FromSeconds(2), out string markDown))
+            {
+                this.logger.LogTrace("Received the message: {0}", markDown);
+                await this.telegramService.SendMessageAsync(markDown, this.cts.Token);
+            }
         }
     }
 }

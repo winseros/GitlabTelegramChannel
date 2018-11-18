@@ -7,27 +7,24 @@ namespace TGramDaemon.Test.Services.MessageHandler
 {
     public class MessageHandlerOptionsTest
     {
-        public class ThrowIfInvalid
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Test_ThrowIfInvalid_Should_Throw_If_Token_Is_Invalid(string address)
         {
-            [Theory]
-            [InlineData(null)]
-            [InlineData("")]
-            public void It_Should_Throw_If_Token_Is_Invalid(string address)
-            {
-                void Caller() => new MessageHandlerOptions {Address = address}.ThrowIfInvalid();
-                var ex = Assert.Throws<ConfigurationException>((Action) Caller);
-                const string expected = "The MessageHandlerOptions.Address setting is not configured";
-                Assert.Equal(expected, ex.Message);
-            }
+            void Caller() => new MessageHandlerOptions {Address = address}.ThrowIfInvalid();
+            var ex = Assert.Throws<ConfigurationException>((Action) Caller);
+            const string expected = "The MessageHandlerOptions.Address setting is not configured";
+            Assert.Equal(expected, ex.Message);
+        }
 
-            [Fact]
-            public void It_Should_Not_Throw_If_Fields_Are_Valid()
+        [Fact]
+        public void Test_ThrowIfInvalid_Should_Not_Throw_If_Fields_Are_Valid()
+        {
+            new MessageHandlerOptions
             {
-                new MessageHandlerOptions
-                {
-                    Address = "tcp://127.0.0.1:5000"
-                }.ThrowIfInvalid();
-            }
+                Address = "tcp://127.0.0.1:5000"
+            }.ThrowIfInvalid();
         }
     }
 }
