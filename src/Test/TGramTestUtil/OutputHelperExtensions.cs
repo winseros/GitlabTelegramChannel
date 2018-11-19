@@ -8,10 +8,12 @@ namespace TGramTestUtil
     {
         public static Action<ContainerBuilder> Capture(this ITestOutputHelper output)
         {
-            return builder =>
-            {
-                builder.RegisterModule(new XUnitModule(output));
-            };
+            return builder => builder.RegisterXUnit(output);
+        }
+
+        public static void RegisterXUnit(this ContainerBuilder builder, ITestOutputHelper output)
+        {
+            builder.RegisterModule(new XUnitModule(output));
         }
     }
 }

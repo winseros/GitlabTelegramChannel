@@ -34,7 +34,7 @@ namespace TGramWeb.Services.GitlabProcessService
 
                 result = processor.Process(request);
 
-                this.logger.LogDebug("The processor call result was: {0}", result);
+                this.logger.LogDebug("The processor call result was: {@0}", result);
 
                 if (!result.NoResult)
                 {
@@ -45,7 +45,7 @@ namespace TGramWeb.Services.GitlabProcessService
 
             if (result.NoResult)
             {
-                this.logger.LogDebug("No particular processing result was obtained - exit with NoResult status");
+                this.logger.LogDebug("No particular processing result was obtained - exit with Failure status");
                 result = RequestProcessResult.CreateFailure("The system is not capable of processing such requests");
             }
 
