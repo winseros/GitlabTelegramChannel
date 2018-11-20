@@ -1,7 +1,9 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 
 namespace TGramWeb.Services.GitlabProcessService
 {
+    [DebuggerDisplay("Success: {Success}, NoResult: {NoResult}, Reason: {Reason}")]
     public struct RequestProcessResult
     {
         public static RequestProcessResult CreateSuccess()

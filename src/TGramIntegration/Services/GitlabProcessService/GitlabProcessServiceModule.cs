@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using TGramWeb.Services.GitlabProcessService.RequestProcessors;
+using TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline;
 
 namespace TGramWeb.Services.GitlabProcessService
 {
@@ -10,6 +10,7 @@ namespace TGramWeb.Services.GitlabProcessService
             services.AddSingleton<IGitlabProcessService, GitlabProcessServiceImpl>();
             //services.AddSingleton<IGitlabProcessor, MergeGitlabGitlabProcessor>();
             services.AddSingleton<IGitlabProcessor, PipelineFailureGitlabProcessor>();
+            services.AddSingleton<IPipelineMessageFormatter, PipelineMessageFormatter>();
         }
     }
 }

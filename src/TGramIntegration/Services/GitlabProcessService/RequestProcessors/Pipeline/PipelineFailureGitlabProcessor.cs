@@ -3,16 +3,19 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using TGramWeb.Services.MessageClient;
 
-namespace TGramWeb.Services.GitlabProcessService.RequestProcessors
+namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
 {
     public class PipelineFailureGitlabProcessor: IGitlabProcessor
     {
+        private readonly IPipelineMessageFormatter messageFormatter;
         private readonly IMessageClient messageClient;
         private readonly ILogger logger;
 
-        public PipelineFailureGitlabProcessor(IMessageClient messageClient,
+        public PipelineFailureGitlabProcessor(IPipelineMessageFormatter messageFormatter,
+                                              IMessageClient messageClient,
                                               ILogger<PipelineFailureGitlabProcessor> logger)
         {
+            this.messageFormatter = messageFormatter;
             this.messageClient = messageClient;
             this.logger = logger;
         }
@@ -21,14 +24,14 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors
         {
             RequestProcessResult result;
 
-            string objectKind = request["object_kind"]?.ToString();
+            string objectKind = request[GitlabKeys.ObjectKind]?.ToString();
             this.logger.LogTrace("The request object kind was determined as: \"{0}\"", objectKind);
 
-            if (string.Equals(objectKind, "pipeline", StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(objectKind, GitlabKeys.ObjectKindPipeline, StringComparison.InvariantCultureIgnoreCase))
             {
                 var errors = new JTokenErrors();
 
-                string requestStatus = request.RequireChild("object_attributes", errors)?.RequireString("status", errors);
+                string requestStatus = request.RequireChild(GitlabKeys.ObjectAttributes, errors)?.RequireString(GitlabKeys.Status, errors);
                 this.logger.LogDebug("The request status was determined as \"{0}\"", requestStatus);
 
                 if (errors.HasAny)
@@ -39,30 +42,17 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors
                 }
                 else
                 {
-                    if (string.Equals(requestStatus, "failure", StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(requestStatus, GitlabKeys.StatusFailure, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        JToken project = request.RequireChild("project", errors);
-                        JToken attributes = request.RequireChild("object_attributes", errors);
-
-                        string projectName = project?.RequireString("name", errors);
-                        string projectUrl = project?.RequireString("web_url", errors);
-                        string branchName = attributes?.RequireString("ref", errors);
-                        string pipelineId = attributes?.RequireString("id", errors);
-
-                        if (errors.HasAny)
+                        result = this.messageFormatter.TryFormat(request, out string message);
+                        if (result.Success)
                         {
-                            string error = errors.Compose();
-                            result = RequestProcessResult.CreateFailure(error);
-                            this.logger.LogDebug("The request processing was rejected with message: \"{0}\"", error);
+                            this.logger.LogDebug("Successfully formatted the message: \"{0}\"", message);
+                            this.messageClient.ScheduleDelivery(message);
                         }
                         else
                         {
-                            string message = $"*{projectName}*\r\nThe pipeline [#{pipelineId}]({projectUrl}/pipelines/{pipelineId}) has failed for the branch *{branchName}*!";
-                            this.logger.LogTrace("Composed the message: \"{0}\"", message);
-
-                            this.messageClient.ScheduleDelivery(message);
-
-                            result = RequestProcessResult.CreateSuccess();
+                            this.logger.LogDebug("Could not format the message: {@0}", result);
                         }
                     }
                     else
