@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,7 +24,8 @@ namespace TGramWeb.Services.GitlabProcessService
             var i = 1;
             foreach (string error in this.errors)
             {
-                sb.Append(i).Append(". ").Append(error).Append(Environment.NewLine);
+                if (i > 1) sb.Append(Environment.NewLine);
+                sb.Append(i).Append(". ").Append(error);
                 i++;
             }
 
