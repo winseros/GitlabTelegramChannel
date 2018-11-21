@@ -20,13 +20,13 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
 
             var errors = new JTokenErrors();
 
-            JToken project = request.RequireChild("project", errors);
-            JToken attributes = request.RequireChild("object_attributes", errors);
+            JToken project = request.RequireChild(GitlabKeys.Project, errors);
+            JToken attributes = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
 
-            string projectName = project?.RequireString("name", errors);
-            string projectUrl = project?.RequireString("web_url", errors);
-            string branchName = attributes?.RequireString("ref", errors);
-            string pipelineId = attributes?.RequireString("id", errors);
+            string projectName = project?.RequireString(GitlabKeys.Name, errors);
+            string projectUrl = project?.RequireString(GitlabKeys.WebUrl, errors);
+            string branchName = attributes?.RequireString(GitlabKeys.Ref, errors);
+            string pipelineId = attributes?.RequireString(GitlabKeys.Id, errors);
 
             RequestProcessResult result;
 
