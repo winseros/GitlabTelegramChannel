@@ -22,7 +22,8 @@ namespace TGramWeb.Services.GitlabProcessService
         public const string StateOpened = "opened";
         public const string StateClosed = "closed";
         public const string StateMerged = "merged";
-        public const string LastEditedAt = "last_edited_at";
+        public const string UpdatedAt = "updated_at";
+        public const string CreatedAt = "created_at";
         public const string Url = "url";
         public const string Title = "title";
     }

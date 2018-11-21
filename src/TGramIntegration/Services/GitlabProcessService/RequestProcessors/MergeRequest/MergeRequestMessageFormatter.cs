@@ -36,7 +36,8 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             string title = attributes?.RequireString(GitlabKeys.Title, errors);
             string url = attributes?.RequireString(GitlabKeys.Url, errors);
             string iid = attributes?.RequireString(GitlabKeys.Iid, errors);
-            string lastEditedAt = attributes?[GitlabKeys.LastEditedAt].ToString();
+            string createdAt = attributes?[GitlabKeys.CreatedAt].ToString();
+            string updatedAt = attributes?[GitlabKeys.UpdatedAt].ToString();
 
             RequestProcessResult result;
 
@@ -50,8 +51,8 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             }
             else
             {
-                state = MergeRequestMessageFormatter.GetMergeRequestState(state, lastEditedAt);
-                message = $"[{projectName}]({projectUrl}). The merge request [#{iid} {title}]({url}) (branch [{sourceBranch}]({projectUrl}/tree/{sourceBranch}) to [{targetBranch}]({projectUrl}/tree/{targetBranch})) has been {state} by {authorName}.\r\nAssignee *{assigneeName}*.";
+                state = MergeRequestMessageFormatter.GetMergeRequestState(state, createdAt == updatedAt);
+                message = $"[{projectName.Md()}]({projectUrl}). The merge request [#{iid} {title.Md()}]({url}) (branch [{sourceBranch.Md()}]({projectUrl}/tree/{sourceBranch}) to [{targetBranch.Md()}]({projectUrl}/tree/{targetBranch})) has been {state} by {authorName}.\r\nAssignee *{assigneeName}*.";
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
             }
@@ -59,9 +60,9 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             return result;
         }
 
-        private static string GetMergeRequestState(string state, string lastEditedAt)
+        private static string GetMergeRequestState(string state, bool updateEq)
         {
-            string result = string.IsNullOrEmpty(lastEditedAt)
+            string result = updateEq
                                 ? state
                                 : string.Equals(state, GitlabKeys.StateOpened, StringComparison.InvariantCultureIgnoreCase)
                                     ? "updated"
