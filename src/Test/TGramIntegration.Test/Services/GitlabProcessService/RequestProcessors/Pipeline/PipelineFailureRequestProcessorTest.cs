@@ -1,4 +1,4 @@
-using Autofac.Extras.Moq;
+﻿using Autofac.Extras.Moq;
 using Moq;
 using Newtonsoft.Json.Linq;
 using TGramTestUtil;
@@ -99,7 +99,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Pipeline
                 var request = new JObject
                 {
                     [GitlabKeys.ObjectKind] = GitlabKeys.ObjectKindPipeline,
-                    [GitlabKeys.ObjectAttributes] = new JObject {[GitlabKeys.Status] = GitlabKeys.StatusFailure}
+                    [GitlabKeys.ObjectAttributes] = new JObject {[GitlabKeys.Status] = GitlabKeys.StatusFailed}
                 };
                 RequestProcessResult result = processor.Process(request);
 
@@ -129,7 +129,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Pipeline
                 var request = new JObject
                 {
                     [GitlabKeys.ObjectKind] = GitlabKeys.ObjectKindPipeline,
-                    [GitlabKeys.ObjectAttributes] = new JObject {[GitlabKeys.Status] = GitlabKeys.StatusFailure}
+                    [GitlabKeys.ObjectAttributes] = new JObject {[GitlabKeys.Status] = GitlabKeys.StatusFailed}
                 };
                 RequestProcessResult result = processor.Process(request);
 

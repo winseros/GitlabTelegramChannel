@@ -42,7 +42,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
                 }
                 else
                 {
-                    if (string.Equals(requestStatus, GitlabKeys.StatusFailure, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(requestStatus, GitlabKeys.StatusFailed, StringComparison.InvariantCultureIgnoreCase))
                     {
                         result = this.messageFormatter.TryFormat(request, out string message);
                         if (result.Success)

@@ -40,7 +40,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
             }
             else
             {
-                message = $"*{projectName}*\r\nThe pipeline [#{pipelineId}]({projectUrl}/pipelines/{pipelineId}) has failed for the branch *{branchName}*!";
+                message = $"[{projectName}]({projectUrl}). The pipeline [{pipelineId}]({projectUrl}/pipelines/{pipelineId}) has failed for the branch [{branchName}]({projectUrl}/tree/{branchName})!";
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
             }
