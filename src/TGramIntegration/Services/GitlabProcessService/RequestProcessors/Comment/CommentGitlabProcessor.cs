@@ -3,19 +3,16 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using TGramWeb.Services.MessageClient;
 
-namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
+namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Comment
 {
-    public class PipelineFailureGitlabProcessor: IGitlabProcessor
+    public abstract class CommentGitlabProcessor: IGitlabProcessor
     {
-        private readonly IPipelineMessageFormatter messageFormatter;
         private readonly IMessageClient messageClient;
         private readonly ILogger logger;
 
-        public PipelineFailureGitlabProcessor(IPipelineMessageFormatter messageFormatter,
-                                              IMessageClient messageClient,
-                                              ILogger<PipelineFailureGitlabProcessor> logger)
+        protected CommentGitlabProcessor(IMessageClient messageClient,
+                                         ILogger logger)
         {
-            this.messageFormatter = messageFormatter;
             this.messageClient = messageClient;
             this.logger = logger;
         }
@@ -27,12 +24,12 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
             string objectKind = request[GitlabKeys.ObjectKind]?.ToString();
             this.logger.LogTrace("The request object kind was determined as: \"{0}\"", objectKind);
 
-            if (string.Equals(objectKind, GitlabKeys.ObjectKindPipeline, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(objectKind, GitlabKeys.ObjectKindNote, StringComparison.InvariantCultureIgnoreCase))
             {
                 var errors = new JTokenErrors();
 
-                string requestStatus = request.RequireChild(GitlabKeys.ObjectAttributes, errors)?.RequireString(GitlabKeys.Status, errors);
-                this.logger.LogDebug("The request status was determined as \"{0}\"", requestStatus);
+                string noteableType = request.RequireChild(GitlabKeys.ObjectAttributes, errors)?.RequireString(GitlabKeys.NoteableType, errors);
+                this.logger.LogDebug("The noteable type was determined as \"{0}\"", noteableType);
 
                 if (errors.HasAny)
                 {
@@ -42,9 +39,9 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
                 }
                 else
                 {
-                    if (string.Equals(requestStatus, GitlabKeys.StatusFailed, StringComparison.InvariantCultureIgnoreCase))
+                    if (this.CanHandle(noteableType))
                     {
-                        result = this.messageFormatter.TryFormat(request, out string message);
+                        result = this.TryFormat(request, out string message);
                         if (result.Success)
                         {
                             this.logger.LogDebug("Successfully formatted the message: \"{0}\"", message);
@@ -57,7 +54,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
                     }
                     else
                     {
-                        this.logger.LogDebug("Can not handle the request with the \"{0}\" status", requestStatus);
+                        this.logger.LogDebug("Can not handle the request with the \"{0}\" noteable type", noteableType);
                         result = RequestProcessResult.CreateNoResult();
                     }
                 }
@@ -70,5 +67,9 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
 
             return result;
         }
+
+        protected abstract bool CanHandle(string noteableType);
+
+        protected abstract RequestProcessResult TryFormat(JObject request, out string message);
     }
 }

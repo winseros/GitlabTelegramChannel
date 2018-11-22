@@ -4,8 +4,12 @@ namespace TGramWeb.Services.GitlabProcessService
     {
         public const string ObjectKind = "object_kind";
         public const string ObjectKindPipeline = "pipeline";
+        public const string ObjectKindNote = "note";
         public const string ObjectKindMergeRequest = "merge_request";
         public const string ObjectAttributes = "object_attributes";
+        public const string NoteableType = "noteable_type";
+        public const string NoteableTypeSnippet = "Snippet";
+        public const string NoteableTypeMergeRequest = "MergeRequest";
         public const string Status = "status";
         public const string StatusFailed = "failed";
         public const string Project = "project";
@@ -26,5 +30,7 @@ namespace TGramWeb.Services.GitlabProcessService
         public const string CreatedAt = "created_at";
         public const string Url = "url";
         public const string Title = "title";
+        public const string Note = "note";
+        public const string MergeRequest = "merge_request";
     }
 }
