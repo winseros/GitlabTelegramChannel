@@ -25,8 +25,8 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             JToken project = request.RequireChild(GitlabKeys.Project, errors);
             JToken attributes = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
 
-            string authorName = author.RequireString(GitlabKeys.Name, errors);
-            string assigneeName = assignee.RequireString(GitlabKeys.Name, errors);
+            string authorName = author?.RequireString(GitlabKeys.Name, errors);
+            string assigneeName = assignee?.RequireString(GitlabKeys.Name, errors);
             string projectName = project?.RequireString(GitlabKeys.Name, errors);
             string projectUrl = project?.RequireString(GitlabKeys.WebUrl, errors);
 
@@ -36,8 +36,8 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             string title = attributes?.RequireString(GitlabKeys.Title, errors);
             string url = attributes?.RequireString(GitlabKeys.Url, errors);
             string iid = attributes?.RequireString(GitlabKeys.Iid, errors);
-            string createdAt = attributes?[GitlabKeys.CreatedAt].ToString();
-            string updatedAt = attributes?[GitlabKeys.UpdatedAt].ToString();
+            string createdAt = attributes?[GitlabKeys.CreatedAt]?.ToString();
+            string updatedAt = attributes?[GitlabKeys.UpdatedAt]?.ToString();
 
             RequestProcessResult result;
 
@@ -52,7 +52,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             else
             {
                 state = MergeRequestMessageFormatter.GetMergeRequestState(state, createdAt == updatedAt);
-                message = $"[{projectName.Md()}]({projectUrl}). The merge request [#{iid} {title.Md()}]({url}) (branch [{sourceBranch.Md()}]({projectUrl}/tree/{sourceBranch}) to [{targetBranch.Md()}]({projectUrl}/tree/{targetBranch})) has been {state} by {authorName}.\r\nAssignee *{assigneeName}*.";
+                message = $"[{projectName.Md()}]({projectUrl}). The merge request [#{iid} {title.Md()}]({url}) (branch [{sourceBranch.Md()}]({projectUrl}/tree/{sourceBranch}) to [{targetBranch.Md()}]({projectUrl}/tree/{targetBranch})) was {state} by {authorName}.\r\nAssignee *{assigneeName}*.";
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
             }
