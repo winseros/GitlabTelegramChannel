@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 using TGramTestUtil;
 using TGramWeb.Services.GitlabProcessService;
 using TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest;
-using TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline;
 using TGramWeb.Services.MessageClient;
 using Xunit;
 using Xunit.Abstractions;
