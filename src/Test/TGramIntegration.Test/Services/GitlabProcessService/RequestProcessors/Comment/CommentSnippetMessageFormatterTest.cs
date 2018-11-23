@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Autofac.Extras.Moq;
 using Newtonsoft.Json.Linq;
 using TGramTestUtil;
@@ -26,7 +24,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Comment
             using (AutoMock mock = AutoMock.GetLoose())
             {
                 var formatter = mock.Create<CommentSnippetMessageFormatter>();
-                void Caller() => formatter.TryFormat(null, out string msg);
+                void Caller() => formatter.TryFormat(null, out string _);
                 var ex = Assert.Throws<ArgumentNullException>((Action) Caller);
                 Assert.Equal("request", ex.ParamName);
             }
@@ -39,7 +37,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Comment
             {
                 var formatter = mock.Create<CommentSnippetMessageFormatter>();
 
-                RequestProcessResult result = formatter.TryFormat(new JObject(), out string msg1);
+                RequestProcessResult result = formatter.TryFormat(new JObject(), out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
                 string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.User}\"\r\n2. The json object is missing the field: \"{GitlabKeys.Project}\"\r\n3. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"";
@@ -52,7 +50,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Comment
                     [GitlabKeys.Project] = new JObject(),
                     [GitlabKeys.ObjectAttributes] = new JObject()
                 };
-                result = formatter.TryFormat(request2, out string msg2);
+                result = formatter.TryFormat(request2, out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
 

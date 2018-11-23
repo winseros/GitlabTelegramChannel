@@ -24,7 +24,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
             using (AutoMock mock = AutoMock.GetLoose())
             {
                 var formatter = mock.Create<MergeRequestMessageFormatter>();
-                void Caller() => formatter.TryFormat(null, out string msg);
+                void Caller() => formatter.TryFormat(null, out string _);
                 var ex = Assert.Throws<ArgumentNullException>((Action) Caller);
                 Assert.Equal("request", ex.ParamName);
             }
@@ -37,7 +37,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
             {
                 var formatter = mock.Create<MergeRequestMessageFormatter>();
 
-                RequestProcessResult result = formatter.TryFormat(new JObject(), out string msg1);
+                RequestProcessResult result = formatter.TryFormat(new JObject(), out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
                 string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.User}\"\r\n2. The json object is missing the field: \"{GitlabKeys.Assignee}\"\r\n3. The json object is missing the field: \"{GitlabKeys.Project}\"\r\n4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"";
@@ -51,7 +51,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
                     [GitlabKeys.Project] = new JObject(),
                     [GitlabKeys.ObjectAttributes] = new JObject()
                 };
-                result = formatter.TryFormat(request2, out string msg2);
+                result = formatter.TryFormat(request2, out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
 
