@@ -56,7 +56,7 @@ namespace TGramDaemon.Test.Services.MessageHandler
                     pushSocket.SendFrame("some-message");
 
                     Mock<ITelegramService> telegramService = mock.Mock<ITelegramService>();
-                    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
                     Predicate<CancellationToken> isNotCancelled = token => !token.IsCancellationRequested;
                     while (!cts.Token.IsCancellationRequested)
                     {
@@ -116,9 +116,6 @@ namespace TGramDaemon.Test.Services.MessageHandler
                 }
             }
         }
-
-
-
 
         [Fact]
         public async Task Test_StopAsync_Should_Throw_If_Called_Twice()
