@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramWeb", "TGramIntegration\TGramWeb.csproj", "{15480B4F-33CD-4140-9458-3CB247B513B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramWeb", "TGramWeb\TGramWeb.csproj", "{15480B4F-33CD-4140-9458-3CB247B513B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{928625DD-D2CA-4C2C-8A01-D86BA5357105}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramWeb.Test", "Test\TgramIntegration.Test\TGramWeb.Test.csproj", "{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramWeb.Test", "Test\TGramWeb.Test\TGramWeb.Test.csproj", "{8B163591-42E8-4C5F-B2F9-49FBB0D3340F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramDaemon", "TGramDaemon\TGramDaemon.csproj", "{8342406A-5863-47F4-91F6-2002E9739D9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramCommon", "TGramCommon\TGramCommon.csproj", "{4867E23E-53A7-4997-90EF-C9CD743B8AA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramCommon", "TGramCommon\TGramCommon.csproj", "{4867E23E-53A7-4997-90EF-C9CD743B8AA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramDaemon.Test", "Test\TGramDaemon.Test\TGramDaemon.Test.csproj", "{57C8E7A5-F213-4DA3-BDF5-439C42586F59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramDaemon.Test", "Test\TGramDaemon.Test\TGramDaemon.Test.csproj", "{57C8E7A5-F213-4DA3-BDF5-439C42586F59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGramTestUtil", "Test\TGramTestUtil\TGramTestUtil.csproj", "{4719B6AB-D7CE-4D5C-B075-A774D4729D85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TGramTestUtil", "Test\TGramTestUtil\TGramTestUtil.csproj", "{4719B6AB-D7CE-4D5C-B075-A774D4729D85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

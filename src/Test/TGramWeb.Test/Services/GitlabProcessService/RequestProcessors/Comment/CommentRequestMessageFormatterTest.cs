@@ -40,7 +40,10 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Comment
                 RequestProcessResult result = formatter.TryFormat(new JObject(), out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
-                string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.User}\"\r\n2. The json object is missing the field: \"{GitlabKeys.Project}\"\r\n3. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"\r\n4. The json object is missing the field: \"{GitlabKeys.MergeRequest}\"";
+                string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.User}\"{Environment.NewLine}" +
+                                   $"2. The json object is missing the field: \"{GitlabKeys.Project}\"{Environment.NewLine}" +
+                                   $"3. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"{Environment.NewLine}" +
+                                   $"4. The json object is missing the field: \"{GitlabKeys.MergeRequest}\"";
                 Assert.Equal(expected1, result.Reason);
 
 
@@ -55,12 +58,12 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Comment
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
 
-                string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.User}.{GitlabKeys.Name}\"\r\n" +
-                                   $"2. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"\r\n" +
-                                   $"3. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"\r\n" +
-                                   $"4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Note}\"\r\n" +
-                                   $"5. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Url}\"\r\n" +
-                                   $"6. The json object is missing the field: \"{GitlabKeys.MergeRequest}.{GitlabKeys.Title}\"\r\n" +
+                string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.User}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"2. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"3. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"{Environment.NewLine}" +
+                                   $"4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Note}\"{Environment.NewLine}" +
+                                   $"5. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Url}\"{Environment.NewLine}" +
+                                   $"6. The json object is missing the field: \"{GitlabKeys.MergeRequest}.{GitlabKeys.Title}\"{Environment.NewLine}" +
                                    $"7. The json object is missing the field: \"{GitlabKeys.MergeRequest}.{GitlabKeys.Iid}\"";
                 Assert.Equal(expected2, result.Reason);
             }

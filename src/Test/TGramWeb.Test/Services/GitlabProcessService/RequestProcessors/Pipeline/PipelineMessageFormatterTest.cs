@@ -40,7 +40,8 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Pipeline
                 RequestProcessResult result = formatter.TryFormat(new JObject(), out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
-                string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.Project}\"\r\n2. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"";
+                string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.Project}\"{Environment.NewLine}" +
+                                   $"2. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"";
                 Assert.Equal(expected1, result.Reason);
 
 
@@ -48,7 +49,10 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Pipeline
                 result = formatter.TryFormat(request2, out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
-                string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"\r\n2. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"\r\n3. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Ref}\"\r\n4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Id}\"";
+                string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"2. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"{Environment.NewLine}" +
+                                   $"3. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Ref}\"{Environment.NewLine}" +
+                                   $"4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Id}\"";
                 Assert.Equal(expected2, result.Reason);
             }
         }

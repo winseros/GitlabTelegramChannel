@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TGramIntegration\TGramWeb.csproj" />
+    <ProjectReference Include="..\..\TGramWeb\TGramWeb.csproj" />
     <ProjectReference Include="..\TGramTestUtil\TGramTestUtil.csproj" />
   </ItemGroup>
 

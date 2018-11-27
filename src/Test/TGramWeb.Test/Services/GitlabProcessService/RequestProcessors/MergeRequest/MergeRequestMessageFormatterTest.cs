@@ -40,7 +40,10 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
                 RequestProcessResult result = formatter.TryFormat(new JObject(), out string _);
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
-                string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.User}\"\r\n2. The json object is missing the field: \"{GitlabKeys.Assignee}\"\r\n3. The json object is missing the field: \"{GitlabKeys.Project}\"\r\n4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"";
+                string expected1 = $"1. The json object is missing the field: \"{GitlabKeys.User}\"{Environment.NewLine}" +
+                                   $"2. The json object is missing the field: \"{GitlabKeys.Assignee}\"{Environment.NewLine}" +
+                                   $"3. The json object is missing the field: \"{GitlabKeys.Project}\"{Environment.NewLine}" +
+                                   $"4. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}\"";
                 Assert.Equal(expected1, result.Reason);
 
 
@@ -55,15 +58,15 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
                 Assert.False(result.Success);
                 Assert.False(result.NoResult);
 
-                string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.User}.{GitlabKeys.Name}\"\r\n" +
-                                   $"2. The json object is missing the field: \"{GitlabKeys.Assignee}.{GitlabKeys.Name}\"\r\n" +
-                                   $"3. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"\r\n" +
-                                   $"4. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"\r\n" +
-                                   $"5. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.SourceBranch}\"\r\n" +
-                                   $"6. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.TargetBranch}\"\r\n" +
-                                   $"7. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.State}\"\r\n" +
-                                   $"8. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Title}\"\r\n" +
-                                   $"9. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Url}\"\r\n" +
+                string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.User}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"2. The json object is missing the field: \"{GitlabKeys.Assignee}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"3. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"4. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"{Environment.NewLine}" +
+                                   $"5. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.SourceBranch}\"{Environment.NewLine}" +
+                                   $"6. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.TargetBranch}\"{Environment.NewLine}" +
+                                   $"7. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.State}\"{Environment.NewLine}" +
+                                   $"8. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Title}\"{Environment.NewLine}" +
+                                   $"9. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Url}\"{Environment.NewLine}" +
                                    $"10. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Iid}\"";
                 Assert.Equal(expected2, result.Reason);
             }
