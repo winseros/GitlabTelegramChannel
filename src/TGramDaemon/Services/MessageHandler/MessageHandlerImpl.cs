@@ -17,7 +17,6 @@ namespace TGramDaemon.Services.MessageHandler
         private CancellationTokenSource cts;
         private PullSocket socket;
         private Task process;
-        private bool started;
 
         public MessageHandlerImpl(ITelegramService telegramService,
                                   IOptions<MessageHandlerOptions> options,
@@ -31,10 +30,9 @@ namespace TGramDaemon.Services.MessageHandler
 
         public void Start()
         {
-            if (this.started)
+            if (this.cts != null && !this.cts.IsCancellationRequested)
                 throw new InvalidOperationException("The handler has already been started");
 
-            this.started = true;
             this.logger.LogDebug("Starting the message handler");
             this.cts = new CancellationTokenSource();
             this.socket = new PullSocket();
@@ -44,18 +42,17 @@ namespace TGramDaemon.Services.MessageHandler
 
         public Task StopAsync(CancellationToken ct)
         {
-            if (!this.started)
+            if (this.cts == null || this.cts.IsCancellationRequested)
                 throw new InvalidOperationException("The handler has not been started");
 
-            this.started = false;
-            this.logger.LogDebug("Stopping the message handler");
             this.cts.Cancel();
-            this.socket.Close();
+            this.logger.LogDebug("Stopping the message handler");
 
             var cancel = new TaskCompletionSource<object>();
             ct.Register(() => cancel.SetCanceled());
 
-            return Task.WhenAny(this.process, cancel.Task);
+            return Task.WhenAny(this.process, cancel.Task)
+                       .ContinueWith(task => this.socket.Close(), TaskContinuationOptions.None);
         }
 
         public void Dispose()

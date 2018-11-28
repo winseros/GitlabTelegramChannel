@@ -12,14 +12,15 @@ namespace TGramWeb
     {
         public static void Main(string[] args)
         {
-            IHost daemonHost = DaemonHost.CreateBuilder(args).Build();
-            IWebHost webHost = Program.CreateWebHostBuilder(args).Build();
+            using (IHost daemonHost = DaemonHost.CreateBuilder(args).Build())
+            using (IWebHost webHost = Program.CreateWebHostBuilder(args).Build())
+            {
+                var webLifetime = (IApplicationLifetime) webHost.Services.GetService(typeof(IApplicationLifetime));
+                webLifetime.ApplicationStopping.Register(() => daemonHost.StopAsync(TimeSpan.FromSeconds(5)).Wait());
 
-            var webLifetime = (IApplicationLifetime) webHost.Services.GetService(typeof(IApplicationLifetime));
-            webLifetime.ApplicationStopping.Register(() => daemonHost.StopAsync(TimeSpan.FromSeconds(5)).Wait());
-
-            daemonHost.Start();
-            webHost.Run();
+                daemonHost.Start();
+                webHost.Run();
+            }
         }
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

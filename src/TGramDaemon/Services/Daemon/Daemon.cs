@@ -44,7 +44,8 @@ namespace TGramDaemon.Services.Daemon
         {
             this.logger.LogDebug("Stopping the handlers");
 
-            return Task.WhenAll(this.messageHandlers.Select(p => p.StopAsync(ct)));
+            return Task.WhenAll(this.messageHandlers.Select(p => p.StopAsync(ct)))
+                       .ContinueWith(task => this.logger.LogDebug("Handlers stopped"), TaskContinuationOptions.None);
         }
     }
 }
