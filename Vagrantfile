@@ -19,5 +19,6 @@ Vagrant.configure("2") do |config|
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
     apt-get update
     apt-get -y install docker-ce
+    addgroup vagrant docker
   SHELL
 end

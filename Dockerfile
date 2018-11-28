@@ -1,7 +1,14 @@
 FROM microsoft/dotnet:2.1.500-sdk as build
-COPY /src /src
-RUN dotnet clean src/ && dotnet test -c RELEASE src/
-RUN dotnet clean src/ && dotnet publish -c RELEASE src/TGramWeb
+COPY src/ .
+RUN dotnet restore && \
+    dotnet build -c RELEASE && \
+    dotnet test -c RELEASE && \
+    dotnet publish -c RELEASE TGramWeb -o ./publish
 
-FROM microsoft/dotnet:2.1-runtime
-COPY src/TGramWeb/bin/Release/netcoreapp2.1/publish/ /opt/GitlabTgramChannel/
+FROM microsoft/dotnet:2.1-aspnetcore-runtime as app
+COPY --from=build TGramWeb/publish/ /app
+WORKDIR /app
+ENTRYPOINT ["dotnet", "TGramWeb.dll"]
+EXPOSE 5000/tcp
+ENV ASPNETCORE_ENVIRONMENT Production
+ENV ASPNETCORE_URLS http://localhost:5000
