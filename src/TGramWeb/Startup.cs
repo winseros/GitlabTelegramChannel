@@ -29,7 +29,7 @@ namespace TGramWeb
                         options.DefaultScheme = GitlabAuthenticationDefaults.Scheme;
                     })
                     .AddJwtBearer()
-                    .AddGitlab(options => options.Token = this.Configuration.GetValue<string>("GitLab:Token"));
+                    .AddGitlab(options => this.Configuration.InflateGitlabOptions(options));
 
 
             services.AddAuthorization(options =>

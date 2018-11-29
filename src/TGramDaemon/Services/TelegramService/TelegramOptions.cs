@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using TGramCommon;
 using TGramCommon.Exceptions;
 
 namespace TGramDaemon.Services.TelegramService
@@ -8,6 +10,8 @@ namespace TGramDaemon.Services.TelegramService
     [DebuggerDisplay("Channel: {Channel}, Endpoint: {Endpoint}, Token: {Token}")]
     public class TelegramOptions
     {
+        internal static IConfiguration From(IConfiguration config) => config.GetSection(ConfigKeys.Telegram);
+
         public string Token { get; set; }
 
         public string Channel { get; set; }
@@ -21,7 +25,7 @@ namespace TGramDaemon.Services.TelegramService
             if (string.IsNullOrEmpty(this.Token))
             {
                 sb = new StringBuilder();
-                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Token)} setting not configured");
+                sb.Append($"{counter}. The \"{ConfigKeys.Telegram}:{nameof(this.Token)}\" setting not configured");
                 counter++;
             }
 
@@ -29,7 +33,7 @@ namespace TGramDaemon.Services.TelegramService
             {
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
-                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Channel)} setting not configured");
+                sb.Append($"{counter}. The \"{ConfigKeys.Telegram}:{nameof(this.Channel)}\" setting not configured");
                 counter++;
             }
 
@@ -37,7 +41,7 @@ namespace TGramDaemon.Services.TelegramService
             {
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
-                sb.Append($"{counter}. The {nameof(TelegramOptions)}.{nameof(this.Endpoint)} setting not configured");
+                sb.Append($"{counter}. The \"{ConfigKeys.Telegram}:{nameof(this.Endpoint)}\" setting not configured");
             }
 
             if (sb != null)

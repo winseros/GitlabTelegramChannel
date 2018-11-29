@@ -9,7 +9,7 @@ namespace TGramDaemon.Services.MessageHandler
         {
             services.AddSingleton<IMessageHandlerFactory, MessageHandlerFactoryImpl>();
             services.AddTransient<IMessageHandler, MessageHandlerImpl>();
-            services.Configure<MessageHandlerOptions>(configuration.GetSection("Daemon"));
+            services.Configure<MessageHandlerOptions>(MessageHandlerOptions.From(configuration));
         }
     }
 }

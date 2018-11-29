@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using TGramCommon;
 using TGramCommon.Exceptions;
 
 namespace TGramDaemon.Services.TelegramService
@@ -8,11 +10,18 @@ namespace TGramDaemon.Services.TelegramService
     [DebuggerDisplay("Attempts: {Attempts}, Interval: {Interval}")]
     public class ConnectionOptions
     {
-        public byte Timeout { get; set; } = 20;
+        internal static ConnectionOptions FromConfiguration(IConfiguration config)
+        {
+            ConnectionOptions options = config.GetSection(ConfigKeys.TelegramConnection).Get<ConnectionOptions>()
+                                        ?? new ConnectionOptions();
+            return options;
+        }
 
-        public byte Attempts { get; set; } = 2;
+        public short Timeout { get; set; } = 20;
 
-        public byte Interval { get; set; } = 10;
+        public short Attempts { get; set; } = 2;
+
+        public short Interval { get; set; } = 10;
 
         internal void ThrowIfInvalid()
         {
@@ -23,21 +32,23 @@ namespace TGramDaemon.Services.TelegramService
             {
                 sb = new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
-                sb.Append($"{counter}. The {nameof(ConnectionOptions)}.{nameof(this.Timeout)} must be a positive number");
+                sb.Append($"{counter}. The \"{ConfigKeys.TelegramConnection}:{nameof(this.Timeout)}\" must be a positive number");
+                counter++;
             }
 
             if (this.Attempts <= 0)
             {
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
-                sb.Append($"{counter}. The {nameof(ConnectionOptions)}.{nameof(this.Attempts)} must be a positive number");
+                sb.Append($"{counter}. The \"{ConfigKeys.TelegramConnection}:{nameof(this.Attempts)}\" must be a positive number");
+                counter++;
             }
 
             if (this.Interval <= 0)
             {
                 sb = sb ?? new StringBuilder();
                 if (counter > 1) sb.Append(Environment.NewLine);
-                sb.Append($"{counter}. The {nameof(ConnectionOptions)}.{nameof(this.Interval)} must be a positive number");
+                sb.Append($"{counter}. The \"{ConfigKeys.TelegramConnection}:{nameof(this.Interval)}\" must be a positive number");
             }
 
             if (sb != null)

@@ -8,7 +8,7 @@ namespace TGramWeb.Services.MessageClient
         public static void AddMessageClient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IMessageClient, MessageClientImpl>();
-            services.Configure<MessageClientOptions>(configuration.GetSection("Daemon"));
+            services.Configure<MessageClientOptions>(MessageClientOptions.From(configuration));
         }
     }
 }

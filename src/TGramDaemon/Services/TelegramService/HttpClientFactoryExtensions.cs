@@ -13,7 +13,7 @@ namespace TGramDaemon.Services.TelegramService
 
         public static void AddTelegramClient(this IServiceCollection services, IConfiguration configuration)
         {
-            ConnectionOptions connOptions = configuration.GetSection("TGram:Connection").Get<ConnectionOptions>() ?? new ConnectionOptions();
+            ConnectionOptions connOptions = ConnectionOptions.FromConfiguration(configuration);
             connOptions.ThrowIfInvalid();
 
             services.AddHttpClient(HttpClientFactoryExtensions.ClientName)

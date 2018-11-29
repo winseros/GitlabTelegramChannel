@@ -8,7 +8,7 @@ namespace TGramDaemon.Services.Daemon
         public static void AddDaemon(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHostedService<Daemon>();
-            services.Configure<DaemonOptions>(configuration.GetSection("Daemon"));
+            services.Configure<DaemonOptions>(DaemonOptions.From(configuration));
         }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using TGramCommon;
 using TGramCommon.Exceptions;
 
 namespace TGramWeb.Authentication
@@ -10,7 +11,7 @@ namespace TGramWeb.Authentication
         internal void ThrowIfInvalid()
         {
             if (string.IsNullOrEmpty(this.Token))
-                throw new ConfigurationException($"The {nameof(GitlabAuthenticationOptions)}.{nameof(GitlabAuthenticationOptions.Token)} is not configured");
+                throw new ConfigurationException($"The \"{ConfigKeys.Gitlab}:{nameof(GitlabAuthenticationOptions.Token)}\" is not configured");
         }
     }
 }

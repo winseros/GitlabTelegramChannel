@@ -97,7 +97,7 @@ namespace TGramDaemon.Test.Services.MessageHandler
                     pushSocket.SendFrame("some-message2");
 
                     Mock<ITelegramService> telegramService = mock.Mock<ITelegramService>();
-                    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
                     Predicate<CancellationToken> isNotCancelled = token => !token.IsCancellationRequested;
                     while (!cts.Token.IsCancellationRequested)
                     {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using TGramCommon.Exceptions;
 using TGramDaemon;
 using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
 
@@ -11,6 +12,19 @@ namespace TGramWeb
     public static class Program
     {
         public static void Main(string[] args)
+        {
+            try
+            {
+                Program.RunApplication(args);
+            }
+            catch (ConfigurationException ex)
+            {
+                Console.WriteLine("The application didn't start - the app configuration has the following issues:");
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void RunApplication(string[] args)
         {
             using (IHost daemonHost = DaemonHost.CreateBuilder(args).Build())
             using (IWebHost webHost = Program.CreateWebHostBuilder(args).Build())

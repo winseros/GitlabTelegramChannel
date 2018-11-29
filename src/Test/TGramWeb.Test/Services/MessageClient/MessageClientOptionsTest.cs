@@ -1,28 +1,28 @@
 using System;
 using TGramCommon;
 using TGramCommon.Exceptions;
-using TGramDaemon.Services.MessageHandler;
+using TGramWeb.Services.MessageClient;
 using Xunit;
 
-namespace TGramDaemon.Test.Services.MessageHandler
+namespace TGramWeb.Test.Services.MessageClient
 {
-    public class MessageHandlerOptionsTest
+    public class MessageClientOptionsTest
     {
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Test_ThrowIfInvalid_Should_Throw_If_Token_Is_Invalid(string address)
+        public void Test_ThrowIfInvalid_Should_Throw_If_Address_Is_Invalid(string address)
         {
-            void Caller() => new MessageHandlerOptions {Address = address}.ThrowIfInvalid();
+            void Caller() => new MessageClientOptions {Address = address}.ThrowIfInvalid();
             var ex = Assert.Throws<ConfigurationException>((Action) Caller);
-            string expected = $"The \"{ConfigKeys.Daemon}:{nameof(MessageHandlerOptions.Address)}\" setting is not configured";
+            string expected = $"The \"{ConfigKeys.Daemon}:{nameof(MessageClientOptions.Address)}\" setting is not configured";
             Assert.Equal(expected, ex.Message);
         }
 
         [Fact]
         public void Test_ThrowIfInvalid_Should_Not_Throw_If_Fields_Are_Valid()
         {
-            new MessageHandlerOptions
+            new MessageClientOptions
             {
                 Address = "tcp://127.0.0.1:5000"
             }.ThrowIfInvalid();
