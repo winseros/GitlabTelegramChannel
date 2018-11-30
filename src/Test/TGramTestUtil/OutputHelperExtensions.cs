@@ -11,9 +11,20 @@ namespace TGramTestUtil
             return builder => builder.RegisterXUnit(output);
         }
 
-        public static void RegisterXUnit(this ContainerBuilder builder, ITestOutputHelper output)
+        internal static ITestOutputHelper Output { get; private set; }
+
+        public static IDisposable UseAsSharedSingleton(this ITestOutputHelper output)
         {
-            builder.RegisterModule(new XUnitModule(output));
+            OutputHelperExtensions.Output = output;
+            return new OutputDispose();
+        }
+
+        private sealed class OutputDispose: IDisposable
+        {
+            public void Dispose()
+            {
+                OutputHelperExtensions.Output = null;
+            }
         }
     }
 }
