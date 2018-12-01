@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TGramWeb.Controllers
 {
-    [Route("/health")]
+    [Route("/")]
     [ApiController]
     public class HealthController: ControllerBase
     {
         [HttpGet]
         public IActionResult Index()
         {
-            return this.Ok();
+            return this.Ok("Health check - Ok!");
         }
     }
 }

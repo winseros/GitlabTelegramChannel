@@ -8,7 +8,7 @@ using TGramWeb.Services.GitlabProcessService;
 
 namespace TGramWeb.Controllers
 {
-    [Route("api/gitlab_hook")]
+    [Route("/gitlab_hook")]
     [ApiController]
     [Authorize]
     public class GitlabController : ControllerBase
