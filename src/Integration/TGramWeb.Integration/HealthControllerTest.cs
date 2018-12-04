@@ -24,7 +24,7 @@ namespace TGramWeb.Integration
             using (this.output.UseAsSharedSingleton())
             using (var cts = new CancellationTokenSource())
             {
-                Task start = IntegrationUtils.StartApplication(5000, cts.Token);
+                Task start = IntegrationUtils.StartApplicationAsync(5000, cts.Token);
 
                 HttpResponseMessage message = await IntegrationUtils.HttpGetAsync(new Uri("http://localhost:5000"));
 
@@ -33,8 +33,6 @@ namespace TGramWeb.Integration
                 cts.Cancel();
                 await start;
             }
-            
         }
-
     }
 }
