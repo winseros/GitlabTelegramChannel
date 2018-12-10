@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -30,18 +31,30 @@ namespace TGramWeb.Integration
             using (var cts = new CancellationTokenSource())
             using (IWebHost listener = IntegrationUtils.CreateListener())
             {
+                //arrange
                 Task start = IntegrationUtils.StartApplicationAsync(5000, cts.Token);
                 Task listen = listener.StartListenerAsync(cts.Token);
 
+                //act
                 var uri = new Uri("http://localhost:5000/gitlab_hook");
                 object request = GitlabControllerTest.CreatePipelineFailedRequest();
                 HttpResponseMessage message = await IntegrationUtils.HttpPostAsync(uri, request);
 
+                //assert - OK returned
                 Assert.Equal(HttpStatusCode.OK, message.StatusCode);
 
-                HttpRequest data = await listener.GetCapturedRequestAsync();
-                Assert.Equal("/bota-telegram-bot/sendMessage" ,data.Path);
+                //assert - Telegram message was sent
+                HttpRequest tgRequest = await listener.GetCapturedRequestAsync();
+                Assert.Equal("/bota-telegram-token/sendMessage" ,tgRequest.Path);
 
+                using (var reader = new StreamReader(tgRequest.Body))
+                {
+                    string body = reader.ReadToEnd();
+                    const string expected = "{\"chat_id\":\"a-telegram-channel\",\"text\":\"[A sample project](https://gitlab.com). The pipeline [10](https://gitlab.com/pipelines/10) has failed for the branch [master](https://gitlab.com/tree/master)!\",\"parse_mode\":\"Markdown\"}";
+                    Assert.Equal(expected, body);
+                }
+
+                //shutdown the servers
                 cts.Cancel();
                 await Task.WhenAll(start, listen);
             }
@@ -65,7 +78,5 @@ namespace TGramWeb.Integration
 
             return data;
         }
-
-        
     }
 }

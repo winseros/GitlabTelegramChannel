@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using TGramCommon;
@@ -17,14 +20,17 @@ namespace TGramWeb.Integration
     internal static class IntegrationUtils
     {
         private const string gitlabToken = "a-gitlab-token";
+        private const string telegramToken = "a-telegram-token";
+        private const string telegramChannel = "a-telegram-channel";
+        private const string telegramEndpoint = "http://localhost:47995";
 
         public static Task StartApplicationAsync(short port, CancellationToken ct)
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "test", EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable($"{ConfigKeys.Gitlab}:Token", IntegrationUtils.gitlabToken, EnvironmentVariableTarget.Process);
-            Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Token", "a-telegram-token", EnvironmentVariableTarget.Process);
-            Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Channel", "a-telegram-channel", EnvironmentVariableTarget.Process);
-            Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Endpoint", "http://localhost:47995", EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Token", IntegrationUtils.telegramToken, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Channel", IntegrationUtils.telegramChannel, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Endpoint", IntegrationUtils.telegramEndpoint, EnvironmentVariableTarget.Process);
 
             return Task.Run(() => Program.RunApplication(new string[0], ct), ct);
         }
@@ -33,7 +39,7 @@ namespace TGramWeb.Integration
         {
             IWebHost host = new WebHostBuilder()
                             .CaptureStartupErrors(true)
-                            .UseKestrel(options => { options.ListenLocalhost(47995); })
+                            .UseKestrel(options => { options.ListenLocalhost(new Uri(IntegrationUtils.telegramEndpoint).Port); })
                             .UseStartup<Startup>()
                             .Build();
             host.ServerFeatures.Set(new RequestGate());
@@ -47,7 +53,7 @@ namespace TGramWeb.Integration
                 using (host)
                 {
                     host.StartAsync(ct);
-                    host.WaitForShutdown();
+                    host.WaitForShutdownAsync(ct).GetAwaiter().GetResult();
                 }
             }, ct);
         }
@@ -61,7 +67,23 @@ namespace TGramWeb.Integration
                 {
                     var server = context.RequestServices.GetRequiredService<IServer>();
                     var gate = server.Features.Get<RequestGate>();
-                    gate.Request = context.Request;
+
+                    var feature = context.Features.Get<IHttpRequestFeature>();
+                    gate.Request = new HttpRequestFeature
+                    {
+                        Scheme = feature.Scheme,
+                        RawTarget = feature.RawTarget,
+                        Protocol = feature.Protocol,
+                        Method = feature.Method,
+                        Path = feature.Path,
+                        PathBase = feature.PathBase,
+                        QueryString = feature.QueryString,
+                        Headers = feature.Headers,
+                        Body = new MemoryStream()
+                    };
+                    feature.Body.CopyTo(gate.Request.Body, 1024);
+                    gate.Request.Body.Seek(0, SeekOrigin.Begin);
+
                     context.Response.StatusCode = (int) HttpStatusCode.OK;
                     return Task.CompletedTask;
                 });
@@ -77,25 +99,21 @@ namespace TGramWeb.Integration
                 await Task.Yield();
             }
 
-            HttpRequest result;
             if (gate.Request == null)
-            {
                 throw new Exception("Daemon sent no requests to telegram during the time interval");
-            }
-            else
-            {
-                result = gate.Request;
-                gate.Request = null;
-            }
 
-            return result;
+            var features = new FeatureCollection();
+            features.Set(gate.Request);
+            gate.Request = null;
+
+            return new DefaultHttpRequest(new DefaultHttpContext(features));
         }
 
         public class RequestGate
         {
-            private volatile HttpRequest request;
+            private volatile IHttpRequestFeature request;
 
-            public HttpRequest Request
+            public IHttpRequestFeature Request
             {
                 get => this.request;
                 set => this.request = value;
