@@ -36,6 +36,7 @@ namespace TGramWeb.Integration
                 Task listen = listener.StartListenerAsync(cts.Token);
 
                 //act
+                await IntegrationUtils.WaitForThePortAcquired(5000);
                 var uri = new Uri("http://localhost:5000/gitlab_hook");
                 object request = GitlabControllerTest.CreatePipelineFailedRequest();
                 HttpResponseMessage message = await IntegrationUtils.HttpPostAsync(uri, request);

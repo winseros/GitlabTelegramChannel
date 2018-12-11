@@ -26,6 +26,7 @@ namespace TGramWeb.Integration
             {
                 Task start = IntegrationUtils.StartApplicationAsync(5000, cts.Token);
 
+                await IntegrationUtils.WaitForThePortAcquired(5000);
                 HttpResponseMessage message = await IntegrationUtils.HttpGetAsync(new Uri("http://localhost:5000"));
 
                 Assert.Equal(HttpStatusCode.OK, message.StatusCode);

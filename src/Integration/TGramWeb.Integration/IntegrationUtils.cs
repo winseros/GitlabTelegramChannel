@@ -61,7 +61,7 @@ namespace TGramWeb.Integration
             }, ct);
         }
 
-        public class Startup
+        internal class Startup
         {
             public void Configure(IApplicationBuilder app)
             {
@@ -114,7 +114,7 @@ namespace TGramWeb.Integration
             return new DefaultHttpRequest(new DefaultHttpContext(features));
         }
 
-        public class RequestGate
+        internal class RequestGate
         {
             private volatile IHttpRequestFeature request;
 
@@ -148,14 +148,42 @@ namespace TGramWeb.Integration
             }
         }
 
+        public static async Task WaitForThePortAcquired(short port)
+        {
+            IPGlobalProperties globalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            var wait = true;
+            while (wait)
+            {
+                IPEndPoint[] listeners = globalProperties.GetActiveTcpListeners();
+                foreach (IPEndPoint listener in listeners)
+                {
+                    if (listener.Port == port)
+                    {
+                        wait = false;
+
+                    }
+                    else
+                    {
+                        if (cts.IsCancellationRequested)
+                            throw new Exception($"The timeout of waiting for the {port} port gets released has expired");
+                        await Task.Yield();
+                    }
+                }
+            }
+
+            while (wait) ;
+        }
+
         private static async Task WaitForThePortReleased(short port)
         {
             bool busy;
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            IPGlobalProperties globalProperties = IPGlobalProperties.GetIPGlobalProperties();
             do
             {
                 busy = false;
-                IPGlobalProperties globalProperties = IPGlobalProperties.GetIPGlobalProperties();
+
                 IPEndPoint[] listeners = globalProperties.GetActiveTcpListeners();
                 foreach (IPEndPoint listener in listeners)
                 {
