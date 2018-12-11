@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -24,15 +25,17 @@ namespace TGramWeb.Integration
         private const string telegramChannel = "a-telegram-channel";
         private const string telegramEndpoint = "http://localhost:47995";
 
-        public static Task StartApplicationAsync(short port, CancellationToken ct)
+        public static async Task StartApplicationAsync(short port, CancellationToken ct)
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "test", EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("ASPNETCORE_URLS", $"http://::{port}", EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable($"{ConfigKeys.Gitlab}:Token", IntegrationUtils.gitlabToken, EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Token", IntegrationUtils.telegramToken, EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Channel", IntegrationUtils.telegramChannel, EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable($"{ConfigKeys.Telegram}:Endpoint", IntegrationUtils.telegramEndpoint, EnvironmentVariableTarget.Process);
 
-            return Task.Run(() => Program.RunApplication(new string[0], ct), ct);
+            await IntegrationUtils.WaitForThePortReleased(port);
+            await Task.Run(() => Program.RunApplication(new string[0], ct), ct);
         }
 
         public static IWebHost CreateListener()
@@ -69,7 +72,7 @@ namespace TGramWeb.Integration
                     var gate = server.Features.Get<RequestGate>();
 
                     var feature = context.Features.Get<IHttpRequestFeature>();
-                    gate.Request = new HttpRequestFeature
+                    var mockRequest = new HttpRequestFeature
                     {
                         Scheme = feature.Scheme,
                         RawTarget = feature.RawTarget,
@@ -81,8 +84,10 @@ namespace TGramWeb.Integration
                         Headers = feature.Headers,
                         Body = new MemoryStream()
                     };
-                    feature.Body.CopyTo(gate.Request.Body, 1024);
-                    gate.Request.Body.Seek(0, SeekOrigin.Begin);
+                    feature.Body.CopyTo(mockRequest.Body, 1024);
+                    mockRequest.Body.Seek(0, SeekOrigin.Begin);
+
+                    gate.Request = mockRequest;
 
                     context.Response.StatusCode = (int) HttpStatusCode.OK;
                     return Task.CompletedTask;
@@ -141,6 +146,30 @@ namespace TGramWeb.Integration
                 HttpResponseMessage message = await client.PostAsync(uri, content);
                 return message;
             }
+        }
+
+        private static async Task WaitForThePortReleased(short port)
+        {
+            bool busy;
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            do
+            {
+                busy = false;
+                IPGlobalProperties globalProperties = IPGlobalProperties.GetIPGlobalProperties();
+                IPEndPoint[] listeners = globalProperties.GetActiveTcpListeners();
+                foreach (IPEndPoint listener in listeners)
+                {
+                    if (listener.Port == port)
+                    {
+                        if (cts.IsCancellationRequested)
+                            throw new Exception($"The timeout of waiting for the {port} port gets released has expired");
+
+                        busy = true;
+                        await Task.Yield();
+                        break;
+                    }
+                }
+            } while (busy);
         }
     }
 }

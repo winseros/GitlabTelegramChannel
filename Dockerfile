@@ -6,6 +6,7 @@ COPY src/TGramIntegration.sln .
 COPY src/Test/TGramDaemon.Test/*.csproj ./Test/TGramDaemon.Test/
 COPY src/Test/TGramTestUtil/*.csproj ./Test/TGramTestUtil/
 COPY src/Test/TGramWeb.Test/*.csproj ./Test/TGramWeb.Test/
+COPY src/Integration/TGramWeb.Integration/*.csproj ./Integration/TGramWeb.Integration/
 COPY src/TGramCommon/*.csproj ./TGramCommon/
 COPY src/TGramDaemon/*.csproj ./TGramDaemon/
 COPY src/TGramWeb/*.csproj ./TGramWeb/
@@ -16,7 +17,7 @@ RUN dotnet restore
 #build and test the app
 COPY src/ ./
 RUN dotnet build -c RELEASE && \
-    dotnet test -c RELEASE && \
+    dotnet test -c RELEASE --no-build && \
     dotnet publish -c RELEASE TGramWeb -o /publish
 
 #runtime container
