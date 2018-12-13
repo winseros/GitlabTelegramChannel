@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace TGramWeb.Services.GitlabProcessService
@@ -7,11 +7,17 @@ namespace TGramWeb.Services.GitlabProcessService
     {
         public static string RequireString(this JToken source, string key, JTokenErrors errors)
         {
-            JToken data = source.RequireChild(key, errors);
-            return data?.ToString();
+            JToken data = source.RequireChild<string>(key, errors);
+            return data?.Value<string>();
         }
 
         public static JToken RequireChild(this JToken source, string key, JTokenErrors errors)
+        {
+            JToken data = source.RequireChild<object>(key, errors);
+            return data;
+        }
+
+        private static JToken RequireChild<T>(this JToken source, string key, JTokenErrors errors)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -21,8 +27,9 @@ namespace TGramWeb.Services.GitlabProcessService
                 throw new ArgumentNullException(nameof(errors));
 
             JToken data = source[key];
-            if (data == null)
+            if (data == null || data.Value<T>() == null)
             {
+                data = null;
                 errors.Add(string.IsNullOrEmpty(source.Path)
                                ? $"The json object is missing the field: \"{key}\""
                                : $"The json object is missing the field: \"{source.Path}.{key}\"");

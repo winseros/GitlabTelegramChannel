@@ -22,11 +22,12 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
 
             JToken project = request.RequireChild(GitlabKeys.Project, errors);
             JToken attributes = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
+            JToken commit = request.RequireChild(GitlabKeys.Commit, errors);
 
-            string projectName = project?.RequireString(GitlabKeys.Name, errors);
-            string projectUrl = project?.RequireString(GitlabKeys.WebUrl, errors);
+            ProjectInfo projectInfo = project == null ? null : ProjectInfo.Read(project, errors);
             string branchName = attributes?.RequireString(GitlabKeys.Ref, errors);
             string pipelineId = attributes?.RequireString(GitlabKeys.Id, errors);
+            CommitInfo commitInfo = commit == null ? null : CommitInfo.Read(commit, errors);
 
             RequestProcessResult result;
 
@@ -40,7 +41,9 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
             }
             else
             {
-                message = $"[{projectName}]({projectUrl}). The pipeline [{pipelineId}]({projectUrl}/pipelines/{pipelineId}) has failed for the branch [{branchName}]({projectUrl}/tree/{branchName})!";
+                message = $"[{projectInfo.Name}]({projectInfo.Url}). The pipeline [{pipelineId}]({projectInfo.Url}/pipelines/{pipelineId}) has failed for the branch [{branchName}]({projectInfo.Url}/tree/{branchName})!\r\n\r\n"
+                          + $"The last commit [{commitInfo.Hash}]({commitInfo.Url}) by *{commitInfo.AuthorName}*\r\n{commitInfo.Message}";
+
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
             }

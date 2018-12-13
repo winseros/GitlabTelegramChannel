@@ -51,7 +51,9 @@ namespace TGramWeb.Integration
                 using (var reader = new StreamReader(tgRequest.Body))
                 {
                     string body = reader.ReadToEnd();
-                    const string expected = "{\"chat_id\":\"a-telegram-channel\",\"text\":\"[A sample project](https://gitlab.com). The pipeline [10](https://gitlab.com/pipelines/10) has failed for the branch [master](https://gitlab.com/tree/master)!\",\"parse_mode\":\"Markdown\"}";
+                    const string expected = "{\"chat_id\":\"a-telegram-channel\",\"text\":\"[A sample project](https://gitlab.com/group/project). The pipeline [10](https://gitlab.com/group/project/pipelines/10) has failed for the branch [master](https://gitlab.com/group/project/tree/master)!" +
+                                            "\\r\\n\\r\\nThe last commit [567890j](https://gitlab.com/group/project/tree/567890jlkhgtfauygsih) " +
+                                            "by *user_name*\\r\\nA simple commit message with \'quotes\' and \\\"Quotes\\\"\",\"parse_mode\":\"Markdown\"}";
                     Assert.Equal(expected, body);
                 }
 
@@ -65,17 +67,29 @@ namespace TGramWeb.Integration
         {
             IDictionary<string, object> project = new ExpandoObject();
             project[GitlabKeys.Name] = "A sample project";
-            project[GitlabKeys.WebUrl] = "https://gitlab.com";
+            project[GitlabKeys.WebUrl] = "https://gitlab.com/group/project";
+            project[GitlabKeys.PathWithNamespace] = "/group/project";
 
             IDictionary<string, object> attributes = new ExpandoObject();
             attributes[GitlabKeys.Status] = GitlabKeys.StatusFailed;
             attributes[GitlabKeys.Ref] = "master";
             attributes[GitlabKeys.Id] = 10;
 
+            IDictionary<string, object> author = new ExpandoObject();
+            author[GitlabKeys.Name] = "user_name";
+            author[GitlabKeys.Email] = "user_email";
+
+            IDictionary<string, object> commit = new ExpandoObject();
+            commit[GitlabKeys.Id] = "567890jlkhgtfauygsih";
+            commit[GitlabKeys.Url] = "https://gitlab.com/group/project/tree/567890jlkhgtfauygsih";
+            commit[GitlabKeys.Message] = "A simple commit message with 'quotes' and \"Quotes\"";
+            commit[GitlabKeys.Author] = author;
+
             IDictionary<string, object> data = new ExpandoObject();
             data[GitlabKeys.ObjectKind] = GitlabKeys.ObjectKindPipeline;
             data[GitlabKeys.Project] = project;
             data[GitlabKeys.ObjectAttributes] = attributes;
+            data[GitlabKeys.Commit] = commit;
 
             return data;
         }

@@ -38,10 +38,25 @@ namespace TGramWeb.Test.Services.GitlabProcessService
         }
 
         [Fact]
-        public void Test_RequireString_Returns_Errors_For_Plain_Objects()
+        public void Test_RequireString_Returns_Errors_For_Plain_Objects_And_Missing_Properties()
         {
             var errors = new JTokenErrors();
             var container = new JObject();
+            string str1 = container.RequireString("prop1", errors);
+
+            Assert.Null(str1);
+            Assert.True(errors.HasAny);
+
+            const string expected = "1. The json object is missing the field: \"prop1\"";
+            string error = errors.Compose();
+            Assert.Equal(expected, error);
+        }
+
+        [Fact]
+        public void Test_RequireString_Returns_Errors_For_Plain_Objects_And_Null_Properties()
+        {
+            var errors = new JTokenErrors();
+            var container = new JObject {["prop1"] = null};
             string str1 = container.RequireString("prop1", errors);
 
             Assert.Null(str1);
