@@ -73,9 +73,10 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
         }
 
         [Theory]
-        [InlineData(GitlabKeys.StateOpened, "created-at", "created-at", "opened")]
-        [InlineData(GitlabKeys.StateOpened, "created-at", "updated-at", "updated")]
-        [InlineData(GitlabKeys.StateClosed, "created-at", "updated-at", "closed")]
+        [InlineData(GitlabKeys.StateOpened, "2018-05-10T10:20:25", "2018-05-10T10:20:25", "opened")]
+        [InlineData(GitlabKeys.StateOpened, "2018-05-10T10:20:25", "2018-05-10T10:20:26", "opened")]
+        [InlineData(GitlabKeys.StateOpened, "2018-05-10T10:20:25", "2018-05-10T10:59:59", "updated")]
+        [InlineData(GitlabKeys.StateClosed, "2018-05-10T10:20:25", "2018-05-10T10:59:59", "closed")]
         public void Test_TryFormat_Returns_Positive_If_Message_Was_Formatted(string state, string createdAt, string updatedAt, string expectedText)
         {
             using (AutoMock mock = AutoMock.GetLoose(this.output.Capture()))

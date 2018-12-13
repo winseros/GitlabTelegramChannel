@@ -66,8 +66,9 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.Comment
         }
 
         [Theory]
-        [InlineData("created-at", "created-at", "commented")]
-        [InlineData("created-at", "updated-at", "updated the comment")]
+        [InlineData("2018-05-10T10:20:25", "2018-05-10T10:20:25", "commented")]
+        [InlineData("2018-05-10T10:20:25", "2018-05-10T10:20:26", "commented")]
+        [InlineData("2018-05-10T10:20:25", "2018-05-10T10:59:59", "updated the comment")]
         public void Test_TryFormat_Returns_Positive_If_Message_Was_Formatted(string createdAt, string updatedAt, string expectedText)
         {
             using (AutoMock mock = AutoMock.GetLoose(this.output.Capture()))

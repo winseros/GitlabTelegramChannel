@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Gitlab Telegram Channel integration API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "health-index", 
+        "summary": "A health-check endpoint",
+        "description": "Returns a 200-OK in case if the API is working",
+        "responses": {
+          "200": {
+            "description": "The 'OK' text" 
+          }
+        }
+      }
+    },
+    "/gitlab_hook": {
+      "post": {
+        "operationId": "gitlab_index",
+        "summary": "GitLab hook endpoint",
+        "description": "Target your gitlab instance to invoke this endpoint when hooks fire",
+        "parameters": [{
+          "name": "X-Gitlab-Token",
+          "in": "header",
+          "description": "GitLab hook secret token",
+          "required": true,
+          "schema": {
+            "type": "string" 
+          }
+        }], 
+        "requestBody": {
+          "description": "A gitlab hook data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/gitlab_event" 
+              },
+              "example": {
+                "$ref": "#/components/examples/gitlab_hook_pipeline_event" 
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The operation was successful" 
+          },
+          "400": {
+            "description": "The system could not handle the arguments provided" 
+          },
+          "401": {
+            "description": "The user was not authorized" 
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "gitlab_event": {
+        "title": "GitLab Event", 
+        "oneOf": [{
+          "$ref": "#/components/schemas/gitlab_pipeline_event" 
+        }],
+        "discriminator": {
+          "propertyName": "object_kind" 
+        }
+      },
+      "gitlab_pipeline_event": {
+        "type": "object",
+        "title": "GitLab Pipeline Event",
+        "properties": {
+          "object_kind": {
+            "type": "string",
+            "enum": ["pipeline"] 
+          },
+          "object_attributes": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": ["failed"],
+                "description": "Pipeline status. Currently only the 'failed' status is supported." 
+              },
+              "ref": {
+                "type": "string",
+                "description": "Git branch name pipeline was running for" 
+              },
+              "id": {
+                "type": "integer",
+                "description": "Pipeline id" 
+              }
+            },
+            "required": ["status", "ref", "id"] 
+          },
+          "project": {
+            "$ref": "#/components/schemas/gitlab_project"
+          }
+        },
+        "required": ["object_kind", "object_attributes", "project"] 
+      },
+      "gitlab_project": {
+        "type": "object",
+        "title": "GitLab Project Metadata",
+        "properties": {
+          "name": {
+            "type": "string" 
+          },
+          "web_url": {
+            "type": "string" 
+          }
+        },
+        "required": ["name", "web_url"]
+      } 
+    },
+    "examples": {
+      "gitlab_hook_pipeline_event": {
+        "object_kind": "pipeline",
+        "project": {
+          "name": "An example project",
+          "web_url": "https://gitlab.com/mygroup/example_project" 
+        },
+        "object_attributes": {
+          "status": "failed",
+          "ref": "master",
+          "id": 156 
+        }
+      } 
+    }
+  }
+}

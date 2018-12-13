@@ -51,7 +51,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             }
             else
             {
-                state = MergeRequestMessageFormatter.GetMergeRequestState(state, createdAt == updatedAt);
+                state = MergeRequestMessageFormatter.GetMergeRequestState(state, createdAt, updatedAt);
                 message = $"[{projectName.Md()}]({projectUrl}). The merge request [#{iid} {title.Md()}]({url}) (branch [{sourceBranch.Md()}]({projectUrl}/tree/{sourceBranch}) to [{targetBranch.Md()}]({projectUrl}/tree/{targetBranch})) was {state} by {authorName}.\r\nAssignee *{assigneeName}*.";
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
@@ -60,9 +60,9 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             return result;
         }
 
-        private static string GetMergeRequestState(string state, bool updateEq)
+        private static string GetMergeRequestState(string state, string createdAt, string updatedAt)
         {
-            string result = updateEq
+            string result = DateComparer.DateStringsMatch(createdAt, updatedAt) //they might differ for 1 second
                                 ? state
                                 : string.Equals(state, GitlabKeys.StateOpened, StringComparison.InvariantCultureIgnoreCase)
                                     ? "updated"

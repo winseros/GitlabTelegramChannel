@@ -60,7 +60,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Comment
 
         private static string GetCommentAction(string createdAt, string updatedAt)
         {
-            return string.Equals(createdAt, updatedAt, StringComparison.CurrentCultureIgnoreCase)
+            return DateComparer.DateStringsMatch(createdAt, updatedAt)
                        ? "commented"
                        : "updated the comment";
         }
