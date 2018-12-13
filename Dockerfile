@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1.500-sdk as build
+FROM microsoft/dotnet:2.2-sdk as build
 WORKDIR /build
 
 #copy the files, required for "dotnet restore"
@@ -21,7 +21,7 @@ RUN dotnet build -c RELEASE && \
     dotnet publish -c RELEASE TGramWeb -o /publish
 
 #runtime container
-FROM microsoft/dotnet:2.1-aspnetcore-runtime as app
+FROM microsoft/dotnet:2.2-aspnetcore-runtime as app
 WORKDIR /app
 COPY --from=build /publish/ ./
 ENTRYPOINT ["dotnet", "TGramWeb.dll"]
