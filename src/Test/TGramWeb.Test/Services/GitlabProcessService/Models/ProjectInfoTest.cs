@@ -1,22 +1,29 @@
 using System;
 using Newtonsoft.Json.Linq;
 using TGramWeb.Services.GitlabProcessService;
+using TGramWeb.Services.GitlabProcessService.Models;
 using Xunit;
 
-namespace TGramWeb.Test.Services.GitlabProcessService
+namespace TGramWeb.Test.Services.GitlabProcessService.Models
 {
     public class ProjectInfoTest
     {
         [Fact]
-        public void Test_Read_Should_Throw_If_Called_With_Illegal_Args()
+        public void Test_TryRead_Should_Throw_If_Called_With_Illegal_Args()
         {
-            void Caller1() => ProjectInfo.Read(null, null);
-            var ex = Assert.Throws<ArgumentNullException>((Action) Caller1);
-            Assert.Equal("project", ex.ParamName);
-
-            void Caller2() => ProjectInfo.Read(new JObject(), null);
-            ex = Assert.Throws<ArgumentNullException>((Action) Caller2);
+            void Caller() => ProjectInfo.TryRead(new JObject(), null);
+            var ex = Assert.Throws<ArgumentNullException>((Action) Caller);
             Assert.Equal("errors", ex.ParamName);
+        }
+
+        [Fact]
+        public void Test_TryRead_Returns_Null_If_Project_Is_Null()
+        {
+            var errors = new JTokenErrors();
+            ProjectInfo info = ProjectInfo.TryRead(null, errors);
+
+            Assert.Null(info);
+            Assert.False(errors.HasAny);
         }
 
         [Theory]
@@ -24,7 +31,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
         [InlineData("project-name", null, null)]
         [InlineData(null, "project-url", null)]
         [InlineData(null, null, "path")]
-        public void Test_Read_Should_Not_Read_If_Project_Lacks_Data(string projectName, string projectUrl, string path)
+        public void Test_TryRead_Should_Not_Read_If_Project_Lacks_Data(string projectName, string projectUrl, string path)
         {
             var data = new JObject
             {
@@ -34,14 +41,14 @@ namespace TGramWeb.Test.Services.GitlabProcessService
             };
 
             var errors = new JTokenErrors();
-            ProjectInfo info = ProjectInfo.Read(data, errors);
+            ProjectInfo info = ProjectInfo.TryRead(data, errors);
 
             Assert.Null(info);
             Assert.True(errors.HasAny);
         }
 
         [Fact]
-        public void Test_Read_Should_Not_Read_If_Could_Not_Retrieve_Server_Url_Plain()
+        public void Test_TryRead_Should_Not_Read_If_Could_Not_Retrieve_Server_Url_Plain()
         {
             var data = new JObject
             {
@@ -51,7 +58,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
             };
 
             var errors = new JTokenErrors();
-            ProjectInfo info = ProjectInfo.Read(data, errors);
+            ProjectInfo info = ProjectInfo.TryRead(data, errors);
 
             Assert.Null(info);
             Assert.True(errors.HasAny);
@@ -61,7 +68,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
         }
 
         [Fact]
-        public void Test_Read_Should_Not_Read_If_Could_Not_Retrieve_Server_Url_Plain_Nested()
+        public void Test_TryRead_Should_Not_Read_If_Could_Not_Retrieve_Server_Url_Plain_Nested()
         {
             var data = new JObject
             {
@@ -75,7 +82,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
             };
 
             var errors = new JTokenErrors();
-            ProjectInfo info = ProjectInfo.Read(request["project"], errors);
+            ProjectInfo info = ProjectInfo.TryRead(request["project"], errors);
 
             Assert.Null(info);
             Assert.True(errors.HasAny);
@@ -85,7 +92,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
         }
 
         [Fact]
-        public void Test_Read_Should_Read_ProjectInfo()
+        public void Test_TryRead_Should_Read_ProjectInfo()
         {
             var data = new JObject
             {
@@ -95,7 +102,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
             };
 
             var errors = new JTokenErrors();
-            ProjectInfo info = ProjectInfo.Read(data, errors);
+            ProjectInfo info = ProjectInfo.TryRead(data, errors);
 
             Assert.Equal("a-project-name", info.Name);
             Assert.Equal("a-web-url/namespace", info.Url);

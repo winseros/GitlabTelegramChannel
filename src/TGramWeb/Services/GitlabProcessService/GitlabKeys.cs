@@ -36,6 +36,7 @@ namespace TGramWeb.Services.GitlabProcessService
         public const string UpdatedAt = "updated_at";
         public const string Url = "url";
         public const string User = "user";
+        public const string UserName = "username";
         public const string WebUrl = "web_url";
     }
 }

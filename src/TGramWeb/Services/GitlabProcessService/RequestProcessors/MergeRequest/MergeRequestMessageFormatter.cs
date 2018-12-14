@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using TGramWeb.Services.GitlabProcessService.Models;
 
 namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
 {
@@ -20,24 +21,23 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
 
             var errors = new JTokenErrors();
 
-            JToken author = request.RequireChild(GitlabKeys.User, errors);
-            JToken assignee = request.RequireChild(GitlabKeys.Assignee, errors);
-            JToken project = request.RequireChild(GitlabKeys.Project, errors);
-            JToken attributes = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
+            JToken authorNode = request.RequireChild(GitlabKeys.User, errors);
+            JToken assigneeNode = request.RequireChild(GitlabKeys.Assignee, errors);
+            JToken projectNode = request.RequireChild(GitlabKeys.Project, errors);
+            JToken attributesNode = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
 
-            string authorName = author?.RequireString(GitlabKeys.Name, errors);
-            string assigneeName = assignee?.RequireString(GitlabKeys.Name, errors);
-            string projectName = project?.RequireString(GitlabKeys.Name, errors);
-            string projectUrl = project?.RequireString(GitlabKeys.WebUrl, errors);
+            UserInfo author = UserInfo.TryRead(authorNode, errors);
+            UserInfo assignee = UserInfo.TryRead(assigneeNode, errors);
+            ProjectInfo projectInfo = ProjectInfo.TryRead(projectNode, errors);
 
-            string sourceBranch = attributes?.RequireString(GitlabKeys.SourceBranch, errors);
-            string targetBranch = attributes?.RequireString(GitlabKeys.TargetBranch, errors);
-            string state = attributes?.RequireString(GitlabKeys.State, errors);
-            string title = attributes?.RequireString(GitlabKeys.Title, errors);
-            string url = attributes?.RequireString(GitlabKeys.Url, errors);
-            string iid = attributes?.RequireString(GitlabKeys.Iid, errors);
-            string createdAt = attributes?[GitlabKeys.CreatedAt]?.ToString();
-            string updatedAt = attributes?[GitlabKeys.UpdatedAt]?.ToString();
+            string sourceBranch = attributesNode?.RequireString(GitlabKeys.SourceBranch, errors);
+            string targetBranch = attributesNode?.RequireString(GitlabKeys.TargetBranch, errors);
+            string state = attributesNode?.RequireString(GitlabKeys.State, errors);
+            string title = attributesNode?.RequireString(GitlabKeys.Title, errors);
+            string url = attributesNode?.RequireString(GitlabKeys.Url, errors);
+            string iid = attributesNode?.RequireString(GitlabKeys.Iid, errors);
+            string createdAt = attributesNode?[GitlabKeys.CreatedAt]?.ToString();
+            string updatedAt = attributesNode?[GitlabKeys.UpdatedAt]?.ToString();
 
             RequestProcessResult result;
 
@@ -52,7 +52,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
             else
             {
                 state = MergeRequestMessageFormatter.GetMergeRequestState(state, createdAt, updatedAt);
-                message = $"[{projectName.Md()}]({projectUrl}). The merge request [#{iid} {title.Md()}]({url}) (branch [{sourceBranch.Md()}]({projectUrl}/tree/{sourceBranch}) to [{targetBranch.Md()}]({projectUrl}/tree/{targetBranch})) was {state} by {authorName}.\r\nAssignee *{assigneeName}*.";
+                message = $"[{projectInfo.Name}]({projectInfo.Url}). The merge request [#{iid} {title}]({url}) (branch [{sourceBranch}]({projectInfo.Url}/tree/{sourceBranch}) to [{targetBranch}]({projectInfo.Url}/tree/{targetBranch})) was {state} by [{author.Name}]({projectInfo.Server}{author.UserName}).\r\nAssignee [{assignee.Name}]({projectInfo.Server}{assignee.UserName}).";
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
             }
@@ -62,7 +62,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.MergeRequest
 
         private static string GetMergeRequestState(string state, string createdAt, string updatedAt)
         {
-            string result = DateComparer.DateStringsMatch(createdAt, updatedAt) //they might differ for 1 second
+            string result = DateComparer.DateStringsMatch(createdAt, updatedAt) //they might differ by 1 second
                                 ? state
                                 : string.Equals(state, GitlabKeys.StateOpened, StringComparison.InvariantCultureIgnoreCase)
                                     ? "updated"

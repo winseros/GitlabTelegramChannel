@@ -50,7 +50,7 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Comment
             else
             {
                 string commentAction = CommentRequestMessageFormatter.GetCommentAction(createdAt, updatedAt);
-                message = $"[{projectName}]({projectUrl}). *{authorName}* has [{commentAction}]({snippetUrl}) on the MR [#{mrIid} {mrTitle.Md()}]({projectUrl}/merge_requests/{mrIid})!\r\n\r\n{snippetText}";
+                message = $"[{projectName}]({projectUrl}). *{authorName}* has [{commentAction}]({snippetUrl}) on the MR [#{mrIid} {mrTitle}]({projectUrl}/merge_requests/{mrIid})!\r\n\r\n{snippetText}";
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
             }

@@ -2,10 +2,13 @@ namespace TGramWeb.Services.GitlabProcessService
 {
     internal static class StringExtensions
     {
-        public static string Md(this string str)
+        public static string MarkdownEscape(this string str)
         {
             return !string.IsNullOrEmpty(str)
-                       ? str.Replace("[", "").Replace("]", "")
+                       ? str.Replace("[", "\\[")
+                            .Replace("]", "\\]")
+                            .Replace("(", "\\(")
+                            .Replace(")", "\\)")
                        : str;
         }
     }

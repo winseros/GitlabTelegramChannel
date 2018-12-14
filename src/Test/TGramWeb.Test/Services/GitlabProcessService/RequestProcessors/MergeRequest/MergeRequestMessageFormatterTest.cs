@@ -59,15 +59,18 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
                 Assert.False(result.NoResult);
 
                 string expected2 = $"1. The json object is missing the field: \"{GitlabKeys.User}.{GitlabKeys.Name}\"{Environment.NewLine}" +
-                                   $"2. The json object is missing the field: \"{GitlabKeys.Assignee}.{GitlabKeys.Name}\"{Environment.NewLine}" +
-                                   $"3. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"{Environment.NewLine}" +
-                                   $"4. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"{Environment.NewLine}" +
-                                   $"5. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.SourceBranch}\"{Environment.NewLine}" +
-                                   $"6. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.TargetBranch}\"{Environment.NewLine}" +
-                                   $"7. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.State}\"{Environment.NewLine}" +
-                                   $"8. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Title}\"{Environment.NewLine}" +
-                                   $"9. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Url}\"{Environment.NewLine}" +
-                                   $"10. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Iid}\"";
+                                   $"2. The json object is missing the field: \"{GitlabKeys.User}.{GitlabKeys.UserName}\"{Environment.NewLine}" +
+                                   $"3. The json object is missing the field: \"{GitlabKeys.Assignee}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"4. The json object is missing the field: \"{GitlabKeys.Assignee}.{GitlabKeys.UserName}\"{Environment.NewLine}" +
+                                   $"5. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.Name}\"{Environment.NewLine}" +
+                                   $"6. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.WebUrl}\"{Environment.NewLine}" +
+                                   $"7. The json object is missing the field: \"{GitlabKeys.Project}.{GitlabKeys.PathWithNamespace}\"{Environment.NewLine}" +
+                                   $"8. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.SourceBranch}\"{Environment.NewLine}" +
+                                   $"9. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.TargetBranch}\"{Environment.NewLine}" +
+                                   $"10. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.State}\"{Environment.NewLine}" +
+                                   $"11. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Title}\"{Environment.NewLine}" +
+                                   $"12. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Url}\"{Environment.NewLine}" +
+                                   $"13. The json object is missing the field: \"{GitlabKeys.ObjectAttributes}.{GitlabKeys.Iid}\"";
                 Assert.Equal(expected2, result.Reason);
             }
         }
@@ -85,12 +88,21 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
 
                 var request = new JObject
                 {
-                    [GitlabKeys.User] = new JObject{[GitlabKeys.Name] = "A-User-Name"},
-                    [GitlabKeys.Assignee] = new JObject{[GitlabKeys.Name] = "An-Assignee-Name"},
+                    [GitlabKeys.User] = new JObject
+                    {
+                        [GitlabKeys.Name] = "A-User",
+                        [GitlabKeys.UserName] = "A-User-Name"
+                    },
+                    [GitlabKeys.Assignee] = new JObject
+                    {
+                        [GitlabKeys.Name] = "An-Assignee",
+                        [GitlabKeys.UserName] = "An-Assignee-Name"
+                    },
                     [GitlabKeys.Project] = new JObject
                     {
                         [GitlabKeys.Name] = "A-Project-Name",
-                        [GitlabKeys.WebUrl] = "A-Web-Url"
+                        [GitlabKeys.WebUrl] = "A-Web-Url/namespace",
+                        [GitlabKeys.PathWithNamespace] = "namespace"
                     },
                     [GitlabKeys.ObjectAttributes] = new JObject
                     {
@@ -110,7 +122,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService.RequestProcessors.MergeReq
                 Assert.False(result.NoResult);
                 Assert.Null(result.Reason);
 
-                string expected = $"[A-Project-Name](A-Web-Url). The merge request [#A-Iid A-Title](A-Url) (branch [A-Source-Branch](A-Web-Url/tree/A-Source-Branch) to [A-Target-Branch](A-Web-Url/tree/A-Target-Branch)) was {expectedText} by A-User-Name.\r\nAssignee *An-Assignee-Name*.";
+                string expected = $"[A-Project-Name](A-Web-Url/namespace). The merge request [#A-Iid A-Title](A-Url) (branch [A-Source-Branch](A-Web-Url/namespace/tree/A-Source-Branch) to [A-Target-Branch](A-Web-Url/namespace/tree/A-Target-Branch)) was {expectedText} by [A-User](A-Web-Url/A-User-Name).\r\nAssignee [An-Assignee](A-Web-Url/An-Assignee-Name).";
                 Assert.Equal(expected, msg);
             }
         }

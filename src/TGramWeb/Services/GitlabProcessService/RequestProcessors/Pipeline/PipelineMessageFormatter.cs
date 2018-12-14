@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using TGramWeb.Services.GitlabProcessService.Models;
 
 namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
 {
@@ -20,14 +21,14 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
 
             var errors = new JTokenErrors();
 
-            JToken project = request.RequireChild(GitlabKeys.Project, errors);
-            JToken attributes = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
-            JToken commit = request.RequireChild(GitlabKeys.Commit, errors);
+            JToken projectNode = request.RequireChild(GitlabKeys.Project, errors);
+            JToken attributesNode = request.RequireChild(GitlabKeys.ObjectAttributes, errors);
+            JToken commitNode = request.RequireChild(GitlabKeys.Commit, errors);
 
-            ProjectInfo projectInfo = project == null ? null : ProjectInfo.Read(project, errors);
-            string branchName = attributes?.RequireString(GitlabKeys.Ref, errors);
-            string pipelineId = attributes?.RequireString(GitlabKeys.Id, errors);
-            CommitInfo commitInfo = commit == null ? null : CommitInfo.Read(commit, errors);
+            ProjectInfo project = ProjectInfo.TryRead(projectNode, errors);
+            string branchName = attributesNode?.RequireString(GitlabKeys.Ref, errors);
+            string pipelineId = attributesNode?.RequireString(GitlabKeys.Id, errors);
+            CommitInfo commit = CommitInfo.TryRead(commitNode, errors);
 
             RequestProcessResult result;
 
@@ -41,8 +42,8 @@ namespace TGramWeb.Services.GitlabProcessService.RequestProcessors.Pipeline
             }
             else
             {
-                message = $"[{projectInfo.Name}]({projectInfo.Url}). The pipeline [{pipelineId}]({projectInfo.Url}/pipelines/{pipelineId}) has failed for the branch [{branchName}]({projectInfo.Url}/tree/{branchName})!\r\n\r\n"
-                          + $"The last commit [{commitInfo.Hash}]({commitInfo.Url}) by *{commitInfo.AuthorName}*\r\n{commitInfo.Message}";
+                message = $"[{project.Name}]({project.Url}). The pipeline [{pipelineId}]({project.Url}/pipelines/{pipelineId}) has failed for the branch [{branchName}]({project.Url}/tree/{branchName})!\r\n\r\n"
+                          + $"The last commit [{commit.Hash}]({commit.Url}) by *{commit.AuthorName}*\r\n{commit.Message}";
 
                 this.logger.LogTrace("Composed the message: \"{0}\"", message);
                 result = RequestProcessResult.CreateSuccess();
