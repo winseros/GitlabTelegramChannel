@@ -42,17 +42,85 @@ There are several ways to configure a .NET Core application
 2) run `dotnet TGramWeb.dll`, optionally providing command-line args. e.g: `dotnet TGramWeb.dll --urls http://localhost:9000 --environment azure`
 
 ## Configuration reference
-| appsettings.json          | Command line                | Env variable              | Description                                                                                                                   |
-|---------------------------|-----------------------------|---------------------------|-------------------------------------------------------------------------------------------------------------------------------|
-| n/a                       | --urls                      | ASPNETCORE_URLS           | Listen address. A semicolon `;` may be used as a separator for multiple addresses                                             |
-| n/a                       | --environment               | ASPNETCORE_ENVIRONMENT    | Determines the application environment. The default value is `Production`                                                     |
-| TGram>Endpoint            | --tgram:endpoint            | TGRAM:ENDPOINT            | Address of the telegram API. Normally `https://api.telegram.org`                                                              |
-| TGram>Token               | --trgram:token              | TGRAM:TOKEN               | Telegram bot token you obtain when creating a bot                                                                             |
-| TGram>Channel             | --tgram:channel             | TGRAM:CHANNEL             | Telegram channel name. E.g. `@mytgramchannel`                                                                                 |
-| TGram>Connection>Timeout  | --tgram:connection:timeout  | TGRAM:CONNECTION:TIMEOUT  | Connection timeout when trying to send a message to telegram                                                                  |
-| TGram>Connection>Attempts | --tgram:connection:attempts | TGRAM:CONNECTION:ATTEMPTS | Number of attempts to send a message to telegram before giving up                                                             |
-| TGram>Connection>Interval | --tgram:connection:interval | TGRAM:CONNECTION:INTERVAL | An interval between telegram call attempts                                                                                    |
-| Gitlab>Token              | --gitlab:token              | GITLAB:TOKEN              | A secure token you obtain when configuring a gitlab web hook                                                                  |
-| Daemon>Address            | --daemon:address            | DAEMON:ADDRESS            | A localhost address used to communicate between the web server and internal message handlers                                  |
-| Daemon>ThreadCount        | --daemon:threadcount        | DAEMON:THREADCOUNT        | The number of internal message handlers                                                                                       |
-| Serilog>...               | --serilog:...               | SERILOG:...               | [Serilog](https://serilog.net) standard configuration. [See here](https://github.com/serilog/serilog-settings-configuration). |
+### Listen addresses
+A set of addresses the app would be listening at. A semicolon `;` may be used as a separator for multiple addresses. E.g. `http://localhost:5000;https://localhost:5001`
+
+| appsettings.json | Command line | Env variable    |
+|------------------|--------------|-----------------|
+| n/a              | --urls       | ASPNETCORE_URLS |
+
+### Runtime environment
+Determines the application environment. The default value is `Production`
+
+| appsettings.json | Command line  | Env variable           |
+|------------------|---------------|------------------------|
+| n/a              | --environment | ASPNETCORE_ENVIRONMENT |
+
+### Gitlab secure token
+A secure token you obtain when configuring a gitlab web hook.
+
+| appsettings.json | Command line   | Env variable |
+|------------------|----------------|--------------|
+| Gitlab>Token     | --gitlab:token | GITLAB:TOKEN |
+
+### Telegram API endpoint
+Address of the telegram API. Normally `https://api.telegram.org`
+
+| appsettings.json | Command line     | Env variable   |
+|------------------|------------------|----------------|
+| TGram>Endpoint   | --tgram:endpoint | TGRAM:ENDPOINT |
+
+### Telegram bot token
+Telegram bot token you obtain when creating a bot.
+
+| appsettings.json | Command line   | Env variable |
+|------------------|----------------|--------------|
+| TGram>Token      | --trgram:token | TGRAM:TOKEN  |
+
+### Telegram channel
+Telegram channel name. E.g. `@mytgramchannel`
+
+| appsettings.json | Command line    | Env variable  |
+|------------------|-----------------|---------------|
+| TGram>Channel    | --tgram:channel | TGRAM:CHANNEL |
+
+### Telegram API connection timeout
+Connection timeout when trying to send a message to telegram.
+
+| appsettings.json         | Command line               | Env variable             |
+|--------------------------|----------------------------|--------------------------|
+| TGram>Connection>Timeout | --tgram:connection:timeout | TGRAM:CONNECTION:TIMEOUT |
+
+### Telegram API connection attempts
+Number of attempts to send a message to telegram before giving up.
+
+| appsettings.json          | Command line                | Env variable              |
+|---------------------------|-----------------------------|---------------------------|
+| TGRAM:CONNECTION:ATTEMPTS | --tgram:connection:attempts | TGRAM:CONNECTION:ATTEMPTS |
+
+### Telegram API connection interval
+An interval between telegram call attempts.
+
+| appsettings.json          | Command line                | Env variable              |
+|---------------------------|-----------------------------|---------------------------|
+| TGram>Connection>Interval | --tgram:connection:interval | TGRAM:CONNECTION:INTERVAL |
+
+### Internal daemon address
+A localhost address used to communicate between the web server and internal message handlers.
+
+| appsettings.json | Command line     | Env variable   |
+|------------------|------------------|----------------|
+| Daemon>Address   | --daemon:address | DAEMON:ADDRESS |
+
+### Number of internal message handlers
+
+| appsettings.json   | Command line         | Env variable       |
+|--------------------|----------------------|--------------------|
+| Daemon>ThreadCount | --daemon:threadcount | DAEMON:THREADCOUNT |
+
+### Serilog
+[Serilog](https://serilog.net) standard configuration. [See here](https://github.com/serilog/serilog-settings-configuration).
+
+| appsettings.json | Command line  | Env variable |
+|------------------|---------------|--------------|
+| Serilog>...      | --serilog:... | SERILOG:...  |
