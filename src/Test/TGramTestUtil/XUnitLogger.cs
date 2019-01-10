@@ -125,7 +125,7 @@ namespace TGramTestUtil
                 logEventPropertyList.Add(new LogEventProperty("Id", new ScalarValue(eventId.Id)));
             if (eventId.Name != null)
                 logEventPropertyList.Add(new LogEventProperty("Name", new ScalarValue(eventId.Name)));
-            return new LogEventProperty("EventId", new StructureValue(logEventPropertyList, null));
+            return new LogEventProperty("EventId", new StructureValue(logEventPropertyList));
         }
     }
 

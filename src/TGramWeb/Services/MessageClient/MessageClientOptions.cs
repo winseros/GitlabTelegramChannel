@@ -5,7 +5,7 @@ using TGramCommon.Exceptions;
 
 namespace TGramWeb.Services.MessageClient
 {
-    [DebuggerDisplay("Address: {Address}")]
+    [DebuggerDisplay("Address: {" + nameof(MessageClientOptions.Address) + "}")]
     public class MessageClientOptions
     {
         internal static IConfiguration From(IConfiguration config) => config.GetSection(ConfigKeys.Daemon);

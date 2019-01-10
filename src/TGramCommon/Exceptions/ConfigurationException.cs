@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace TGramCommon.Exceptions
 {
     public class ConfigurationException: ApplicationException
     {
-        protected ConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected ConfigurationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
 

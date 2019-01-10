@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -35,8 +36,9 @@ namespace TGramTestUtil
                 {
                     Type loggerType = typeof(XUnitLogger<>).MakeGenericType(info.Member.DeclaringType);
                     ConstructorInfo constructor = loggerType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new[] {typeof(ILogger)}, null);
-                    object logger = constructor.Invoke(new object[] {this.logger.ForContext(info.Member.DeclaringType)});
-                    return logger;
+                    Debug.Assert(constructor != null);
+                    object instance = constructor.Invoke(new object[] {this.logger.ForContext(info.Member.DeclaringType)});
+                    return instance;
                 }
 
                 args.Parameters = args.Parameters.Union(new[] {new ResolvedParameter(Match, Provide)});

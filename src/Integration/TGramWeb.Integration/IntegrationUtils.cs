@@ -161,7 +161,6 @@ namespace TGramWeb.Integration
                     if (listener.Port == port)
                     {
                         wait = false;
-
                     }
                     else
                     {
@@ -171,8 +170,6 @@ namespace TGramWeb.Integration
                     }
                 }
             }
-
-            while (wait) ;
         }
 
         private static async Task WaitForThePortReleased(short port)

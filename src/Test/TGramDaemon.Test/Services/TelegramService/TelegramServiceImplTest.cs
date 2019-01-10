@@ -62,6 +62,7 @@ namespace TGramDaemon.Test.Services.TelegramService
 
                     HttpRequestMessage request = mockMessageHandler.MessageSent;
                     Assert.Equal(HttpMethod.Post, request.Method);
+                    // ReSharper disable once StringLiteralTypo
                     Assert.Equal("/botcde/sendMessage", request.RequestUri.AbsolutePath);
 
                     const string expectedContent = "{\"chat_id\":\"abc\",\"text\":\"some-message\",\"parse_mode\":\"Markdown\"}";
@@ -86,7 +87,7 @@ namespace TGramDaemon.Test.Services.TelegramService
                 return Task.FromResult(this.mockResponse);
             }
 
-            public HttpRequestMessage MessageSent { get; set; }
+            public HttpRequestMessage MessageSent { get; private set; }
         }
     }
 }

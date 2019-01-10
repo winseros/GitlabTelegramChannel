@@ -28,8 +28,8 @@ namespace TGramWeb.Test.Services.GitlabProcessService.Models
 
         [Theory]
         [InlineData(null, null)]
-        [InlineData("70jhoce89ca", null)]
-        [InlineData(null, "commmit-url")]
+        [InlineData("some-random-name", null)]
+        [InlineData(null, "commit-url")]
         public void Test_TryRead_Should_Not_Read_If_Commit_Lacks_Data(string name, string username)
         {
             var data = new JObject

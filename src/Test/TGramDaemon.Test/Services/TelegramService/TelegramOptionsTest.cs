@@ -26,6 +26,7 @@ namespace TGramDaemon.Test.Services.TelegramService
             [InlineData("")]
             public void It_Should_Throw_If_Channel_Is_Invalid(string channel)
             {
+                // ReSharper disable once StringLiteralTypo
                 void Caller() => new TelegramOptions {Token = "vbgau", Channel = channel, Endpoint = new Uri("https://example.com")}.ThrowIfInvalid();
                 var ex = Assert.Throws<ConfigurationException>((Action) Caller);
                 string expected = $"1. The \"{ConfigKeys.Telegram}:{nameof(TelegramOptions.Channel)}\" setting not configured";
@@ -35,6 +36,7 @@ namespace TGramDaemon.Test.Services.TelegramService
             [Fact]
             public void It_Should_Throw_If_Endpoint_Is_Invalid()
             {
+                // ReSharper disable once StringLiteralTypo
                 void Caller() => new TelegramOptions {Token = "vbgau", Channel = "abc"}.ThrowIfInvalid();
                 var ex = Assert.Throws<ConfigurationException>((Action) Caller);
                 string expected = $"1. The \"{ConfigKeys.Telegram}:{nameof(TelegramOptions.Endpoint)}\" setting not configured";
@@ -57,7 +59,9 @@ namespace TGramDaemon.Test.Services.TelegramService
             {
                 new TelegramOptions
                 {
+                    // ReSharper disable once StringLiteralTypo
                     Token = "bhcau",
+                    // ReSharper disable once StringLiteralTypo
                     Channel = "bhjkl",
                     Endpoint = new Uri("https://example.com")
                 }.ThrowIfInvalid();

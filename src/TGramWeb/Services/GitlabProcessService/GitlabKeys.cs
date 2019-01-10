@@ -26,7 +26,6 @@ namespace TGramWeb.Services.GitlabProcessService
         public const string Ref = "ref";
         public const string SourceBranch = "source_branch";
         public const string State = "state";
-        public const string StateMerged = "merged";
         public const string StateOpened = "opened";
         public const string StateClosed = "closed";
         public const string Status = "status";

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TGramCommon;
 using TGramCommon.Exceptions;
 using TGramDaemon.Services.TelegramService;

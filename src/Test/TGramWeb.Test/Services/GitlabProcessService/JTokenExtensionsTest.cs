@@ -18,7 +18,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
             ex = Assert.Throws<ArgumentException>((Action) Caller2);
             Assert.Equal("key", ex.Message);
 
-            void Caller3() => new JObject().RequireString("abcd", null);
+            void Caller3() => new JObject().RequireString("prop1-value", null);
             ex = Assert.Throws<ArgumentNullException>((Action) Caller3);
             Assert.Equal("errors", ex.ParamName);
         }
@@ -29,11 +29,11 @@ namespace TGramWeb.Test.Services.GitlabProcessService
             var errors = new JTokenErrors();
             var container = new JObject
             {
-                ["prop1"] = "abcd"
+                ["prop1"] = "prop1-value"
             };
             string str1 = container.RequireString("prop1", errors);
 
-            Assert.Equal("abcd", str1);
+            Assert.Equal("prop1-value", str1);
             Assert.False(errors.HasAny);
         }
 
