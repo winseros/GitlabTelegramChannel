@@ -5,8 +5,8 @@ namespace TGramWeb.Services.GitlabProcessService
         public static string MarkdownEscape(this string str)
         {
             return !string.IsNullOrEmpty(str)
-                       ? str.Replace("[", "\\[")
-                            .Replace("]", "\\]")
+                       ? str.Replace("[", "")
+                            .Replace("]", "")
                             .Replace("(", "\\(")
                             .Replace(")", "\\)")
                        : str;
