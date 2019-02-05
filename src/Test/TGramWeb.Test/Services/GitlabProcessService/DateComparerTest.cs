@@ -11,6 +11,7 @@ namespace TGramWeb.Test.Services.GitlabProcessService
         [InlineData("", "abc", false)]
         [InlineData("abc", null, false)]
         [InlineData("abc", "abc", true)]
+        [InlineData("2019-02-04 09:21:26 UTC", "2019-02-04 09:21:27 UTC", true)]
         [InlineData("2018-05-15T05:10:20+0400", "2018-05-15T05:10:20+0400", true)]
         [InlineData("2018-05-15T05:10:20+0400", "2018-05-15T05:10:22+0400", true)]
         [InlineData("2018-05-15T05:10:22+0400", "2018-05-15T05:10:20+0400", true)]
